@@ -3,6 +3,10 @@
 > 一个基于 [nostr 协议](https://nostr.com/)的 chrome 弹幕插件
 > a chrome extension for danmaku based on [the nostr protocol](https://nostr.com/)
 
+## 截图 (Screenshot)
+
+![screenshot](./screenshot.jpg)
+
 ## 使用方法 (Usage)
 
 1. clone 本仓库并进入文件夹 (clone this repo and cd into it)
