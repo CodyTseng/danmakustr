@@ -35,6 +35,10 @@ chrome.runtime.onMessage.addListener((message) => {
     const { comment, time, self, id } = message
     if (id !== danmakuEngine?.id) return
 
-    danmakuEngine?.emit(comment, self, time)
+    danmakuEngine?.send(comment, {
+      self,
+      time,
+      needSendToRelay: false,
+    })
   }
 })

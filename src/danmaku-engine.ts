@@ -39,30 +39,52 @@ export class DanmakuEngine {
     console.debug('Danmaku created')
   }
 
+  /**
+   * Destroy the danmaku engine and release memory
+   */
   destroy() {
     this.danmaku.destroy()
     console.debug('Danmaku destroyed')
   }
 
+  /**
+   * Hide danmaku comments
+   */
   hide() {
     this.danmaku.hide()
   }
 
+  /**
+   * Show danmaku comments
+   */
   show() {
     this.danmaku.show()
   }
 
-  send(comment: string) {
-    const time = this.videoElement.currentTime
-    this.emit(comment, true, time)
-    chrome.runtime.sendMessage({ type: 'SEND_COMMENT', comment, time, id: this.id })
-  }
-
-  emit(comment: string, self: boolean, time: number) {
+  /**
+   * Send a danmaku comment
+   *
+   * @param comment danmaku comment content
+   * @param options.self whether the comment is sent by the user. Default is true
+   * @param options.time the time of the video when the danmaku comment is sent in seconds. Default is the current time of the video
+   * @param options.needSendToRelay whether the comment should be sent to the relay server. Default is true
+   */
+  send(
+    comment: string,
+    options: {
+      self?: boolean
+      time?: number
+      needSendToRelay?: boolean
+    } = {},
+  ) {
+    const { self = true, time = this.videoElement.currentTime, needSendToRelay = true } = options
     this.danmaku.emit({
       text: comment,
       time,
       style: self ? selfCommentStyle : normalStyle,
     })
+    if (needSendToRelay) {
+      chrome.runtime.sendMessage({ type: 'SEND_COMMENT', comment, time, id: this.id })
+    }
   }
 }
