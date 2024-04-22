@@ -9,6 +9,12 @@
 
 ## 安装 (Install)
 
+### 从 Chrome 商店安装 (Install from Chrome Web Store)
+
+[Chrome Web Store](https://chromewebstore.google.com/detail/danmakustr/mohbdimkkpjjibdfipfajpgpmegnglhb)
+
+### 从源码安装 (Install from source)
+
 1. clone 本仓库并进入文件夹 (clone this repo and cd into it)
 2. 安装依赖并构建 (install dependencies and build)
 
