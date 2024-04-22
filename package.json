@@ -1,7 +1,7 @@
 {
   "name": "danmakustr",
   "displayName": "danmakustr",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "author": "codytseng",
   "description": "a chrome extension for danmaku based on the nostr protocol",
   "type": "module",
