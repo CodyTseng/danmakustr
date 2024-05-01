@@ -3,7 +3,7 @@
   "displayName": "danmakustr",
   "version": "0.0.1",
   "author": "codytseng",
-  "description": "a chrome extension for danmaku based on the nostr protocol",
+  "description": "An extension for online video platforms to show danmaku (弹幕, danmu)",
   "type": "module",
   "license": "MIT",
   "keywords": [
