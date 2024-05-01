@@ -1,9 +1,9 @@
 {
   "name": "danmakustr",
-  "displayName": "danmakustr",
+  "displayName": "danmakustr - decentralized danmaku (弹幕 danmu)",
   "version": "0.0.1",
   "author": "codytseng",
-  "description": "An extension for online video platforms to show danmaku (弹幕, danmu)",
+  "description": "An extension for online video platforms to show danmaku (弹幕 danmu)",
   "type": "module",
   "license": "MIT",
   "keywords": [
