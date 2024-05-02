@@ -77,6 +77,11 @@ export class DanmakuEngine {
       needSendToRelay?: boolean
     } = {},
   ) {
+    comment = comment.trim()
+    if (!comment) {
+      return
+    }
+
     const { self = true, time = this.videoElement.currentTime, needSendToRelay = true } = options
     this.danmaku.emit({
       text: comment,
