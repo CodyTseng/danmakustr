@@ -14,8 +14,9 @@ const selfCommentStyle = {
 
 export class DanmakuEngine {
   readonly id: string
-  private danmaku: Danmaku
+  private readonly danmaku: Danmaku
   private readonly videoElement: HTMLMediaElement
+  private readonly resizeObserver: ResizeObserver
 
   constructor(strategy: PlatformStrategy) {
     const { containerElement, videoElement } = strategy.findContainerAndVideoElement()
@@ -36,6 +37,7 @@ export class DanmakuEngine {
       comments: [],
       speed: 144,
     })
+    this.resizeObserver = new ResizeObserver(() => this.danmaku.resize())
     console.debug('Danmaku created')
   }
 
@@ -44,6 +46,7 @@ export class DanmakuEngine {
    */
   destroy() {
     this.danmaku.destroy()
+    this.resizeObserver.disconnect()
     console.debug('Danmaku destroyed')
   }
 
