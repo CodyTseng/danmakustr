@@ -3,6 +3,10 @@
 > 一个基于 [nostr 协议](https://nostr.com/)的 chrome 弹幕插件
 > a chrome extension for danmaku based on [the nostr protocol](https://nostr.com/)
 
+因为现在使用的人比较少，所以弹幕也很少。所以做了个简单的[网页](https://danmaku.nostr-relay.app/)展示所有的弹幕，方便大家看到别人的弹幕。如果你觉得哪条弹幕有趣，可以点击跳转到对应的视频使用插件进行回复。
+
+Since there are not many users at the moment, there are also few danmakus. So I made a simple [web page](https://danmaku.nostr-relay.app/) to display all the danmakus, making it easier for everyone to see other people's danmakus. If you find any danmaku interesting, you can click to jump to the corresponding video and reply using this extension.
+
 ## 截图 (Screenshot)
 
 ![screenshot](./screenshot.jpg)
