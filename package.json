@@ -1,7 +1,7 @@
 {
   "name": "danmakustr",
   "displayName": "danmakustr - decentralized danmaku (弹幕 danmu)",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": "codytseng",
   "description": "An extension for online video platforms to show danmaku (弹幕 danmu)",
   "type": "module",
