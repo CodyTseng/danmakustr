@@ -38,6 +38,7 @@ export class DanmakuEngine {
       speed: 144,
     })
     this.resizeObserver = new ResizeObserver(() => this.danmaku.resize())
+    this.resizeObserver.observe(containerElement)
     console.debug('Danmaku created')
   }
 
