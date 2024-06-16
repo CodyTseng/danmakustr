@@ -45,7 +45,7 @@
     "@types/react-dom": "^18.2.13",
     "@vitejs/plugin-react": "^4.1.0",
     "autoprefixer": "^10.4.19",
-    "gulp": "^4.0.2",
+    "gulp": "^5.0.0",
     "gulp-zip": "^6.0.0",
     "i": "^0.3.7",
     "npm": "^10.5.2",
