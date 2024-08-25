@@ -1,5 +1,5 @@
 import { PlatformStrategy } from './strategy.interface'
-import { YoutubeStrategy } from './youtube.strategy'
+import { YoutubeStrategy } from './youtube'
 
 export * from './strategy.interface'
 
