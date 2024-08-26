@@ -42,7 +42,7 @@ export default function Relays() {
 
   return (
     <div className="space-y-4">
-      <div className="text-3xl font-medium">Relays</div>
+      <div className="text-3xl font-medium text-primary">Relays</div>
       <div className="space-y-2">
         {relayList.map((url) => (
           <Relay key={url} relayUrl={url} remove={removeRelay} />
