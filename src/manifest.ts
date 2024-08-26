@@ -17,6 +17,10 @@ export default defineManifest({
     service_worker: 'src/background/index.ts',
     type: 'module',
   },
+  action: {
+    default_popup: 'src/popup/index.html',
+    default_icon: 'img/logo-128.png',
+  },
   content_scripts: [
     {
       matches: ['http://www.youtube.com/*', 'https://www.youtube.com/*'],

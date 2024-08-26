@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Trash2, X } from 'lucide-react'
+import { Trash2 } from 'lucide-react'
 import { ChangeEvent, useState } from 'react'
 
 export default function Relays() {
@@ -26,17 +26,24 @@ export default function Relays() {
   }
 
   const addRelay = () => {
-    if (!newRelayUrlInput || relayList.includes(newRelayUrlInput)) {
-      setNewRelayUrlInput('')
+    if (!newRelayUrlInput) {
       return
     }
-
     if (!/^(wss?):\/\/([^\s/:]+)(?::(\d+))?(\/[^\s]*)?$/.test(newRelayUrlInput)) {
       setNewRelayUrlInputError('Invalid URL')
       return
     }
 
-    setRelayList((list) => [...list, newRelayUrlInput])
+    const normalizedUrl = newRelayUrlInput.endsWith('/')
+      ? newRelayUrlInput.slice(0, -1)
+      : newRelayUrlInput
+
+    if (relayList.includes(normalizedUrl)) {
+      setNewRelayUrlInput('')
+      return
+    }
+
+    setRelayList((list) => [...list, normalizedUrl])
     setNewRelayUrlInput('')
   }
 
@@ -49,7 +56,7 @@ export default function Relays() {
         ))}
       </div>
       <div>
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-3 items-center">
           <Input
             value={newRelayUrlInput}
             placeholder="wss://xxx"
@@ -77,11 +84,9 @@ function Relay({ relayUrl, remove }: { relayUrl: string; remove: (url: string) =
         </Avatar>
         <div>{relayUrl}</div>
       </div>
-      <div className="pr-4">
-        <Button className="w-6 h-6 p-0" variant="ghost" onClick={() => remove(relayUrl)}>
-          <Trash2 size={14} className="text-destructive" />
-        </Button>
-      </div>
+      <Button className="w-6 h-6 p-0" variant="ghost" onClick={() => remove(relayUrl)}>
+        <Trash2 size={14} className="text-destructive" />
+      </Button>
     </div>
   )
 }

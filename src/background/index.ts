@@ -1,4 +1,4 @@
-import NDK, { NDKPrivateKeySigner, NDKEvent, NDKUser } from '@nostr-dev-kit/ndk'
+import NDK, { NDKEvent, NDKPrivateKeySigner } from '@nostr-dev-kit/ndk'
 
 type SendCommentMsg = { type: 'SEND_COMMENT'; comment: string; time: number; id: string }
 type InitMsg = { type: 'INIT_COMMENTS'; id: string }
