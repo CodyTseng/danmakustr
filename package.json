@@ -26,6 +26,8 @@
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
     "@nostr-dev-kit/ndk": "^2.7.1",
+    "@radix-ui/react-avatar": "^1.1.0",
+    "@radix-ui/react-slot": "^1.1.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "danmaku": "^2.0.6",

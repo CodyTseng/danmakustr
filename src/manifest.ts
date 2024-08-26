@@ -12,6 +12,7 @@ export default defineManifest({
   icons: {
     128: 'img/logo-128.png',
   },
+  options_page: 'src/options/index.html',
   background: {
     service_worker: 'src/background/index.ts',
     type: 'module',
