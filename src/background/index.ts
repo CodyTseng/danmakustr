@@ -1,4 +1,4 @@
-import NDK, { NDKPrivateKeySigner, NDKEvent, NDKUser } from '@nostr-dev-kit/ndk'
+import NDK, { NDKEvent, NDKPrivateKeySigner } from '@nostr-dev-kit/ndk'
 
 type SendCommentMsg = { type: 'SEND_COMMENT'; comment: string; time: number; id: string }
 type InitMsg = { type: 'INIT_COMMENTS'; id: string }
@@ -11,14 +11,26 @@ let queue: {
 }[] = []
 let ndk: NDK | null = null
 let pubkey: string | null = null
+let signer: NDKPrivateKeySigner = NDKPrivateKeySigner.generate()
 
 async function main() {
-  const { privateKey } = await chrome.storage.local.get('privateKey')
-  let signer: NDKPrivateKeySigner
+  let { privateKey, relayUrls } = await chrome.storage.local.get(['privateKey', 'relayUrls'])
+  if (!relayUrls) {
+    relayUrls = [
+      'wss://nostr-relay.app',
+      'wss://relay.damus.io',
+      'wss://relay.nostr.band',
+      'wss://nos.lol',
+      'wss://nostr.bitcoiner.social',
+      'wss://relay.snort.social',
+    ]
+    await chrome.storage.local.set({
+      relayUrls,
+    })
+  }
   if (privateKey) {
     signer = new NDKPrivateKeySigner(privateKey)
   } else {
-    signer = NDKPrivateKeySigner.generate()
     await chrome.storage.local.set({ privateKey: signer.privateKey })
   }
 
@@ -26,19 +38,7 @@ async function main() {
   const user = await signer.blockUntilReady()
   console.debug('pubkey', user.pubkey)
   pubkey = user.pubkey
-  ndk = new NDK({
-    explicitRelayUrls: [
-      'wss://nostr-relay.app',
-      'wss://relay.damus.io',
-      'wss://relay.nostr.band',
-      'wss://nos.lol',
-      'wss://nostr.bitcoiner.social',
-      'wss://relay.snort.social',
-    ],
-    signer,
-  })
-  await ndk.connect(5000)
-  console.debug('NDK connected')
+  ndk = await createNDK(signer, relayUrls)
   if (queue.length) {
     console.debug('Processing queue...')
     await Promise.allSettled(
@@ -50,6 +50,16 @@ async function main() {
   }
 }
 main()
+
+async function createNDK(signer: NDKPrivateKeySigner, relayUrls: string[]) {
+  const ndk = new NDK({
+    explicitRelayUrls: relayUrls,
+    signer,
+  })
+  await ndk.connect(5000)
+  console.debug('NDK connected')
+  return ndk
+}
 
 async function processMessage(
   message: Msg,
@@ -122,5 +132,12 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
   if (changeInfo.url) {
     chrome.tabs.sendMessage(tabId, { type: 'TAB_UPDATED' })
+  }
+})
+
+chrome.storage.onChanged.addListener(async (changes) => {
+  if (changes.relayUrls) {
+    const relayUrls = changes.relayUrls.newValue
+    ndk = await createNDK(signer, relayUrls)
   }
 })

@@ -12,9 +12,14 @@ export default defineManifest({
   icons: {
     128: 'img/logo-128.png',
   },
+  options_page: 'src/options/index.html',
   background: {
     service_worker: 'src/background/index.ts',
     type: 'module',
+  },
+  action: {
+    default_popup: 'src/popup/index.html',
+    default_icon: 'img/logo-128.png',
   },
   content_scripts: [
     {
