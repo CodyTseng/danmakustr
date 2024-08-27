@@ -2,30 +2,34 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Trash2 } from 'lucide-react'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 
 export default function Relays() {
-  const [relayList, setRelayList] = useState<string[]>([
-    'wss://nostr-relay.app',
-    'wss://relay.damus.io',
-    'wss://relay.nostr.band',
-    'wss://nos.lol',
-    'wss://nostr.bitcoiner.social',
-    'wss://relay.snort.social',
-  ])
+  const [relayUrls, setRelayUrls] = useState<string[]>([])
   const [newRelayUrlInput, setNewRelayUrlInput] = useState<string>('')
   const [newRelayUrlInputError, setNewRelayUrlInputError] = useState<string>('')
 
-  const removeRelay = (url: string) => {
-    setRelayList((list) => list.filter((item) => item !== url))
+  const init = async () => {
+    const { relayUrls: localRelayUrls } = await chrome.storage.local.get('relayUrls')
+    if (localRelayUrls) {
+      setRelayUrls(localRelayUrls)
+    }
   }
 
-  const handleNewRelayUrlInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setNewRelayUrlInput(e.target.value)
-    setNewRelayUrlInputError('')
+  useEffect(() => {
+    init()
+  }, [])
+
+  const updateRelayUrls = async (newRelayUrls: string[]) => {
+    setRelayUrls(newRelayUrls)
+    await chrome.storage.local.set({ relayUrls: newRelayUrls })
   }
 
-  const addRelay = () => {
+  const removeRelay = async (url: string) => {
+    await updateRelayUrls(relayUrls.filter((item) => item !== url))
+  }
+
+  const addRelay = async () => {
     if (!newRelayUrlInput) {
       return
     }
@@ -38,20 +42,32 @@ export default function Relays() {
       ? newRelayUrlInput.slice(0, -1)
       : newRelayUrlInput
 
-    if (relayList.includes(normalizedUrl)) {
+    if (relayUrls.includes(normalizedUrl)) {
       setNewRelayUrlInput('')
       return
     }
 
-    setRelayList((list) => [...list, normalizedUrl])
     setNewRelayUrlInput('')
+    await updateRelayUrls([...relayUrls, normalizedUrl])
+  }
+
+  const handleNewRelayUrlInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setNewRelayUrlInput(e.target.value)
+    setNewRelayUrlInputError('')
+  }
+
+  const handleNewRelayUrlInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      addRelay()
+    }
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 py-4 px-2">
       <div className="text-3xl font-medium text-primary">Relays</div>
       <div className="space-y-2">
-        {relayList.map((url) => (
+        {relayUrls.map((url) => (
           <Relay key={url} relayUrl={url} remove={removeRelay} />
         ))}
       </div>
@@ -59,8 +75,9 @@ export default function Relays() {
         <div className="flex gap-3 items-center">
           <Input
             value={newRelayUrlInput}
-            placeholder="wss://xxx"
+            placeholder="wss://relay.example.com"
             onChange={handleNewRelayUrlInputChange}
+            onKeyDown={handleNewRelayUrlInputKeyDown}
             className={newRelayUrlInputError ? 'border-destructive' : ''}
           />
           <Button onClick={addRelay}>Add</Button>

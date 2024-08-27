@@ -11,7 +11,7 @@ function init() {
   const root = createRoot(appContainer)
   root.render(
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-      <div className="flex flex-col items-center p-5 w-[400px] h-[600px] bg-background text-foreground">
+      <div className="flex flex-col items-center w-[400px] h-[400px] bg-background text-foreground">
         <Popup />
       </div>
     </ThemeProvider>,

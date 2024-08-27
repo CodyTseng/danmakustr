@@ -35,7 +35,7 @@ npm run build
 
 ## TODO
 
-- [ ] 可编辑中继列表 (editable relay list)
+- [x] 可编辑中继列表 (editable relay list)
 - [ ] 支持 NIP-07 (support NIP-07)
 - [ ] 支持给弹幕点赞 (support reaction to danmaku)
 - [ ] 支持查看历史弹幕 (support viewing danmaku history)

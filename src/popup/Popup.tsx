@@ -1,9 +1,10 @@
 import Relays from '@/components/Relays'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 export default function Popup() {
   return (
-    <div className="w-full text-base">
+    <ScrollArea className="w-full text-base px-4">
       <Relays />
-    </div>
+    </ScrollArea>
   )
 }
