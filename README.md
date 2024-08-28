@@ -1,6 +1,7 @@
 # danmakustr - 去中心化弹幕插件 (decentralized danmaku)
 
 > 一个基于 [nostr 协议](https://nostr.com/)的 chrome 弹幕插件，支持 YouTube
+>
 > a chrome extension for danmaku based on [the nostr protocol](https://nostr.com/), supporting YouTube
 
 因为现在使用的人比较少，所以弹幕也很少。所以做了个简单的[网页](https://danmaku.nostr-relay.app/)展示所有的弹幕，方便大家看到别人的弹幕。如果你觉得哪条弹幕有趣，可以点击跳转到对应的视频使用插件进行回复。
