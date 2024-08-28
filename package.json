@@ -1,9 +1,9 @@
 {
   "name": "danmakustr",
-  "displayName": "danmakustr - decentralized danmaku (弹幕 danmu)",
+  "displayName": "danmakustr - 去中心化弹幕插件 (decentralized danmaku)",
   "version": "1.1.0",
   "author": "codytseng",
-  "description": "An extension for online video platforms to show danmaku (弹幕 danmu)",
+  "description": "一款去中心化的弹幕插件，支持 YouTube (A decentralized danmaku extension, supporting YouTube)",
   "type": "module",
   "license": "MIT",
   "keywords": [
