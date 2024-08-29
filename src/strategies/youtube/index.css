@@ -91,6 +91,7 @@ body.dark-mode .danmaku-button-secondary:hover {
 
 body.dark-mode .danmaku-input {
   border-bottom: 1.5px solid rgba(255, 255, 255, 0.4);
+  caret-color: white;
 }
 
 body.dark-mode .danmaku-input:focus-within {
