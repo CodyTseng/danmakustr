@@ -18,12 +18,12 @@ async function main() {
   let { privateKey, relayUrls } = await chrome.storage.local.get(['privateKey', 'relayUrls'])
   if (!relayUrls) {
     relayUrls = [
-      'wss://nostr-relay.app',
-      'wss://relay.damus.io',
-      'wss://relay.nostr.band',
-      'wss://nos.lol',
-      'wss://nostr.bitcoiner.social',
-      'wss://relay.snort.social',
+      'wss://nostr-relay.app/',
+      'wss://relay.damus.io/',
+      'wss://relay.nostr.band/',
+      'wss://nos.lol/',
+      'wss://nostr.bitcoiner.social/',
+      'wss://relay.snort.social/',
     ]
     await chrome.storage.local.set({
       relayUrls,
@@ -154,7 +154,11 @@ chrome.storage.onChanged.addListener(async (changes) => {
       ndk!.pool.addRelay(new NDKRelay(url), true)
     })
     removed.forEach((url: string) => {
-      ndk!.pool.removeRelay(url)
+      ndk!.pool.removeRelay(normalizeUrl(url))
     })
   }
 })
+
+function normalizeUrl(url: string) {
+  return url.endsWith('/') ? url : url + '/'
+}
