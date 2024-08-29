@@ -1,8 +1,9 @@
-import NDK, { NDKEvent, NDKPrivateKeySigner } from '@nostr-dev-kit/ndk'
+import NDK, { NDKEvent, NDKPrivateKeySigner, NDKRelay } from '@nostr-dev-kit/ndk'
 
 type SendCommentMsg = { type: 'SEND_COMMENT'; comment: string; time: number; id: string }
 type InitMsg = { type: 'INIT_COMMENTS'; id: string }
-type Msg = SendCommentMsg | InitMsg
+type GetRelaysMsg = { type: 'GET_RELAYS' }
+type Msg = SendCommentMsg | InitMsg | GetRelaysMsg
 
 let queue: {
   message: Msg
@@ -122,6 +123,15 @@ async function processMessage(
       })
       hasNext = events.size > 0
     } while (hasNext || count > 10000)
+  } else if (message.type === 'GET_RELAYS') {
+    const relays: { url: string; connected: boolean }[] = []
+    ndk.pool.relays.forEach((relay) => {
+      relays.push({
+        url: relay.url,
+        connected: relay.connected,
+      })
+    })
+    sendResponse(relays)
   }
 }
 
@@ -136,8 +146,15 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
 })
 
 chrome.storage.onChanged.addListener(async (changes) => {
-  if (changes.relayUrls) {
-    const relayUrls = changes.relayUrls.newValue
-    ndk = await createNDK(signer, relayUrls)
+  if (changes.relayUrls && ndk) {
+    const { newValue = [], oldValue = [] } = changes.relayUrls
+    const added = newValue.filter((url: string) => !oldValue.includes(url))
+    const removed = oldValue.filter((url: string) => !newValue.includes(url))
+    added.forEach((url: string) => {
+      ndk!.pool.addRelay(new NDKRelay(url), true)
+    })
+    removed.forEach((url: string) => {
+      ndk!.pool.removeRelay(url)
+    })
   }
 })

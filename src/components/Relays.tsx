@@ -4,29 +4,31 @@ import { Input } from '@/components/ui/input'
 import { Trash2 } from 'lucide-react'
 import { ChangeEvent, useEffect, useState } from 'react'
 
+type TRelay = { url: string; connected: boolean }
+
 export default function Relays() {
-  const [relayUrls, setRelayUrls] = useState<string[]>([])
+  const [relays, setRelays] = useState<TRelay[]>([])
   const [newRelayUrlInput, setNewRelayUrlInput] = useState<string>('')
   const [newRelayUrlInputError, setNewRelayUrlInputError] = useState<string>('')
 
-  const init = async () => {
-    const { relayUrls: localRelayUrls } = await chrome.storage.local.get('relayUrls')
-    if (localRelayUrls) {
-      setRelayUrls(localRelayUrls)
-    }
+  const resetRelays = async () => {
+    const relays = await chrome.runtime.sendMessage({ type: 'GET_RELAYS' })
+    setRelays(relays)
   }
 
   useEffect(() => {
-    init()
+    resetRelays()
+    const interval = setInterval(resetRelays, 1000)
+    return () => clearInterval(interval)
   }, [])
 
-  const updateRelayUrls = async (newRelayUrls: string[]) => {
-    setRelayUrls(newRelayUrls)
-    await chrome.storage.local.set({ relayUrls: newRelayUrls })
+  const updateRelayUrls = async (newRelays: TRelay[]) => {
+    setRelays(newRelays)
+    await chrome.storage.local.set({ relayUrls: newRelays.map((relay) => relay.url) })
   }
 
   const removeRelay = async (url: string) => {
-    await updateRelayUrls(relayUrls.filter((item) => item !== url))
+    await updateRelayUrls(relays.filter((item) => item.url !== url))
   }
 
   const addRelay = async () => {
@@ -38,17 +40,15 @@ export default function Relays() {
       return
     }
 
-    const normalizedUrl = newRelayUrlInput.endsWith('/')
-      ? newRelayUrlInput.slice(0, -1)
-      : newRelayUrlInput
+    const normalizedUrl = newRelayUrlInput.endsWith('/') ? newRelayUrlInput : newRelayUrlInput + '/'
 
-    if (relayUrls.includes(normalizedUrl)) {
+    if (relays.some((relay) => relay.url === normalizedUrl)) {
       setNewRelayUrlInput('')
       return
     }
 
     setNewRelayUrlInput('')
-    await updateRelayUrls([...relayUrls, normalizedUrl])
+    await updateRelayUrls(relays.concat({ url: normalizedUrl, connected: false }))
   }
 
   const handleNewRelayUrlInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -67,8 +67,8 @@ export default function Relays() {
     <div className="space-y-4 py-4 px-2">
       <div className="text-3xl font-medium text-primary">Relays</div>
       <div className="space-y-2">
-        {relayUrls.map((url) => (
-          <Relay key={url} relayUrl={url} remove={removeRelay} />
+        {relays.map((relay) => (
+          <Relay key={relay.url} relay={relay} remove={removeRelay} />
         ))}
       </div>
       <div>
@@ -90,12 +90,18 @@ export default function Relays() {
   )
 }
 
-function Relay({ relayUrl, remove }: { relayUrl: string; remove: (url: string) => void }) {
+function Relay({ relay, remove }: { relay: TRelay; remove: (url: string) => void }) {
+  const relayUrl = relay.url
   const url = new URL(relayUrl)
   return (
     <div className="flex justify-between items-center hover:text-primary">
       <div className="flex items-center gap-2">
-        <Avatar className="w-6 h-6">
+        <Avatar
+          className={
+            'w-6 h-6 border-2 border-solid ' +
+            (relay.connected ? 'border-green-500' : 'border-red-500')
+          }
+        >
           <AvatarImage src={getFaviconUrl(url)} />
           <AvatarFallback>{url.host.slice(0, 2).toUpperCase()}</AvatarFallback>
         </Avatar>
