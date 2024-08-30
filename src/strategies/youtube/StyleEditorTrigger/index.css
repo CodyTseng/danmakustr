@@ -1,0 +1,73 @@
+.style-editor-trigger {
+  color: gray;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.style-editor-trigger:hover {
+  color: black;
+}
+
+body.dark-mode .style-editor-trigger:hover {
+  color: white;
+}
+
+.style-editor-content {
+  background-color: rgba(0, 0, 0, 0.85);
+  border-radius: 10px;
+  padding: 2rem;
+  color: white;
+}
+
+.style-editor-content > * + * {
+  margin-top: 2rem;
+}
+
+.style-editor-content-section-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.mode-selector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.color-input {
+  flex: 1;
+  width: 0;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid gray;
+  color: white;
+}
+
+.color-input:focus {
+  outline: none;
+  border-bottom: 1px solid white;
+}
+
+.color-preview {
+  width: 80px;
+  height: 30px;
+  border: 1px solid gray;
+  border-radius: 5px;
+}
+
+.recommended-colors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  width: 220px;
+}
+
+.recommended-color {
+  width: 20px;
+  height: 20px;
+  border: 1px solid gray;
+  border-radius: 5px;
+  cursor: pointer;
+}

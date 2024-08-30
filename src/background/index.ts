@@ -1,9 +1,19 @@
+import { TMode } from '@/types'
 import NDK, { NDKEvent, NDKPrivateKeySigner, NDKRelay } from '@nostr-dev-kit/ndk'
 
-type SendCommentMsg = { type: 'SEND_COMMENT'; comment: string; time: number; id: string }
+type SendCommentMsg = {
+  type: 'SEND_COMMENT'
+  comment: string
+  time: number
+  id: string
+  mode?: TMode
+  color?: string
+}
 type InitMsg = { type: 'INIT_COMMENTS'; id: string }
 type GetRelaysMsg = { type: 'GET_RELAYS' }
 type Msg = SendCommentMsg | InitMsg | GetRelaysMsg
+
+type DanmakuStyle = { mode?: TMode; color?: string }
 
 let queue: {
   message: Msg
@@ -73,18 +83,31 @@ async function processMessage(
   }
 
   if (message.type === 'SEND_COMMENT') {
-    const { comment, time, id } = message
+    const { comment, time, id, mode, color } = message
     console.debug('Emitting comment:', comment, time)
+
+    const style: DanmakuStyle = {}
+    if (mode) {
+      style.mode = mode
+    }
+    if (color) {
+      style.color = color
+    }
+
+    const tags = [
+      ['i', id],
+      ['time', time.toString()],
+    ]
+    if (style.mode || style.color) {
+      tags.push(['style', JSON.stringify(style)])
+    }
 
     const event = new NDKEvent(ndk, {
       kind: 2333,
       created_at: Math.ceil(Date.now() / 1000),
       content: comment,
       pubkey,
-      tags: [
-        ['i', id],
-        ['time', time.toString()],
-      ],
+      tags,
     })
     const result = await event.publish()
     console.debug('Event published:', result)
@@ -109,9 +132,23 @@ async function processMessage(
       events.forEach((event) => {
         const comment = event.content
         const time = parseFloat(event.tags.find((tag) => tag[0] === 'time')?.[1] ?? '0')
+        let style: DanmakuStyle = {}
+        try {
+          const customStyle = JSON.parse(event.tags.find((tag) => tag[0] === 'style')?.[1] ?? '{}')
+          if (customStyle.mode && ['rtl', 'top', 'bottom'].includes(customStyle.mode)) {
+            style.mode = customStyle.mode
+          }
+          if (customStyle.color && /^#[0-9a-fA-F]{6}$/.test(customStyle.color)) {
+            style.color = customStyle.color
+          }
+        } catch {
+          // do nothing
+        }
         chrome.tabs.sendMessage(sender.tab!.id!, {
           type: 'EMIT_INIT_COMMENT',
           comment,
+          mode: style.mode,
+          color: style.color,
           time,
           self: event.pubkey === pubkey,
           id,

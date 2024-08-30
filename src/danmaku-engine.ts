@@ -1,5 +1,6 @@
 import { PlatformStrategy } from '@/strategies'
 import Danmaku from 'danmaku'
+import { TMode } from './types'
 
 const normalStyle = {
   fontSize: '20px',
@@ -79,6 +80,8 @@ export class DanmakuEngine {
       self?: boolean
       time?: number
       needSendToRelay?: boolean
+      color?: string
+      mode?: TMode
     } = {},
   ) {
     comment = comment.trim()
@@ -86,14 +89,32 @@ export class DanmakuEngine {
       return
     }
 
-    const { self = true, time = this.videoElement.currentTime, needSendToRelay = true } = options
+    const {
+      self = true,
+      time = this.videoElement.currentTime,
+      needSendToRelay = true,
+      mode,
+      color,
+    } = options
+    const style = self ? { ...selfCommentStyle } : { ...normalStyle }
+    if (color) {
+      style.color = color
+    }
     this.danmaku.emit({
       text: comment,
+      mode,
       time,
-      style: self ? selfCommentStyle : normalStyle,
+      style,
     })
     if (needSendToRelay) {
-      chrome.runtime.sendMessage({ type: 'SEND_COMMENT', comment, time, id: this.id })
+      chrome.runtime.sendMessage({
+        type: 'SEND_COMMENT',
+        comment,
+        time,
+        id: this.id,
+        mode,
+        color,
+      })
     }
   }
 }
