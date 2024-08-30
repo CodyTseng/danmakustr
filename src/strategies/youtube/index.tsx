@@ -1,8 +1,10 @@
-import { MessageSquareOff, MessageSquareText, SendHorizontal } from 'lucide-react'
-import { ChangeEvent, KeyboardEvent, StrictMode, useState } from 'react'
+import { MessageSquareOff, MessageSquareText } from 'lucide-react'
+import { ChangeEvent, KeyboardEvent, StrictMode, useEffect, useState } from 'react'
 import ReactDOM from 'react-dom/client'
 import { DanmakuEngine } from '../../danmaku-engine'
+import { TMode } from '../../types'
 import { PlatformStrategy } from '../strategy.interface'
+import StyleEditorTrigger from './StyleEditorTrigger'
 
 import './index.css'
 
@@ -57,6 +59,22 @@ export class YoutubeStrategy implements PlatformStrategy {
 function DanmakuControl({ danmakuEngine }: { danmakuEngine: DanmakuEngine }): JSX.Element {
   const [switchValue, setSwitchValue] = useState(true)
   const [inputValue, setInputValue] = useState('')
+  const [mode, setMode] = useState<TMode>('rtl')
+  const [color, setColor] = useState('#FFFFFF')
+
+  const init = async () => {
+    const { mode, color } = await chrome.storage.local.get(['mode', 'color'])
+    if (mode) {
+      setMode(mode)
+    }
+    if (color) {
+      setColor(color)
+    }
+  }
+
+  useEffect(() => {
+    init()
+  }, [])
 
   // check if the dark mode is enabled
   const isYouTubeDarkMode = document.documentElement.hasAttribute('dark')
@@ -81,7 +99,7 @@ function DanmakuControl({ danmakuEngine }: { danmakuEngine: DanmakuEngine }): JS
     attributeFilter: ['dark'],
   })
 
-  function handleSwitchChange() {
+  const handleSwitchChange = () => {
     setSwitchValue((prev) => {
       const newValue = !prev
       if (newValue) {
@@ -93,11 +111,11 @@ function DanmakuControl({ danmakuEngine }: { danmakuEngine: DanmakuEngine }): JS
     })
   }
 
-  function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value)
   }
 
-  function onInputKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+  const handleInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     // if i don't do this. when i press space, the video will be paused. i don't know why
     if (event.key !== ' ') {
       event.stopPropagation()
@@ -107,27 +125,49 @@ function DanmakuControl({ danmakuEngine }: { danmakuEngine: DanmakuEngine }): JS
     }
   }
 
-  async function handleSubmit() {
+  const handleSubmit = async () => {
     setInputValue('')
-    danmakuEngine.send(inputValue)
+    danmakuEngine.send(inputValue, { color, mode })
+  }
+
+  const handleModeChange = async (mode: TMode) => {
+    setMode(mode)
+    await chrome.storage.local.set({ mode })
+  }
+
+  const handleColorChange = async (color: string) => {
+    setColor(color)
+    await chrome.storage.local.set({ color })
   }
 
   return (
     <>
       <button onClick={handleSwitchChange} className="danmaku-button-secondary">
-        {switchValue ? <MessageSquareText /> : <MessageSquareOff />}
+        {switchValue ? (
+          <MessageSquareText size={16} strokeWidth={3} />
+        ) : (
+          <MessageSquareOff size={16} strokeWidth={3} />
+        )}
       </button>
-      <input
-        className="danmaku-input"
-        placeholder="Send a danmaku comment"
-        value={inputValue}
-        disabled={!switchValue}
-        onChange={handleInputChange}
-        onKeyDown={onInputKeyDown}
-        maxLength={100}
-      />
+      <div className="danmaku-input-wrapper">
+        <StyleEditorTrigger
+          mode={mode}
+          color={color}
+          onModeChange={handleModeChange}
+          onColorChange={handleColorChange}
+        />
+        <input
+          className="danmaku-input"
+          placeholder="Send a danmaku comment"
+          value={inputValue}
+          disabled={!switchValue}
+          onChange={handleInputChange}
+          onKeyDown={handleInputKeyDown}
+          maxLength={100}
+        />
+      </div>
       <button onClick={handleSubmit} disabled={!switchValue} className="danmaku-button-primary">
-        <SendHorizontal />
+        Send
       </button>
     </>
   )

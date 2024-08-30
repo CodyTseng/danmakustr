@@ -53,6 +53,7 @@ There are many [other relay implementations](https://github.com/aljazceru/awesom
 ## TODO
 
 - [x] 可编辑中继列表 (editable relay list)
+- [x] 支持自定义弹幕颜色和显示模式 (support custom danmaku color and display mode)
 - [ ] 支持 NIP-07 (support NIP-07)
 - [ ] 支持给弹幕点赞 (support reaction to danmaku)
 - [ ] 支持查看历史弹幕 (support viewing danmaku history)
