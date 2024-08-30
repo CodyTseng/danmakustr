@@ -24,9 +24,17 @@ const recommendedColors = [
 ]
 
 const modes: { name: string; mode: TMode; icon: ReactElement }[] = [
-  { name: 'Scroll', mode: 'rtl', icon: <ScrollDanmakuIcon style={{ width: '3rem' }} /> },
-  { name: 'Top', mode: 'top', icon: <TopDanmakuIcon style={{ width: '3rem' }} /> },
-  { name: 'Bottom', mode: 'bottom', icon: <BottomDanmakuIcon style={{ width: '3rem' }} /> },
+  {
+    name: 'Scroll',
+    mode: 'rtl',
+    icon: <ScrollDanmakuIcon style={{ width: '3rem', height: '3rem' }} />,
+  },
+  { name: 'Top', mode: 'top', icon: <TopDanmakuIcon style={{ width: '3rem', height: '3rem' }} /> },
+  {
+    name: 'Bottom',
+    mode: 'bottom',
+    icon: <BottomDanmakuIcon style={{ width: '3rem', height: '3rem' }} />,
+  },
 ]
 
 export default function StyleEditorTrigger({

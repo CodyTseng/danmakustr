@@ -27,6 +27,7 @@ body.dark-mode .style-editor-trigger:hover {
 .style-editor-content-section-title {
   font-size: 1.5rem;
   font-weight: bold;
+  margin-bottom: 0.25rem;
 }
 
 .mode-selector {
@@ -51,7 +52,7 @@ body.dark-mode .style-editor-trigger:hover {
 }
 
 .color-preview {
-  width: 80px;
+  width: 90px;
   height: 30px;
   border: 1px solid gray;
   border-radius: 5px;
@@ -60,8 +61,8 @@ body.dark-mode .style-editor-trigger:hover {
 .recommended-colors {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
-  width: 220px;
+  gap: 10px;
+  width: 214px;
 }
 
 .recommended-color {

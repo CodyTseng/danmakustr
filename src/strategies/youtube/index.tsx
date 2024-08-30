@@ -2,9 +2,9 @@ import { MessageSquareOff, MessageSquareText } from 'lucide-react'
 import { ChangeEvent, KeyboardEvent, StrictMode, useEffect, useState } from 'react'
 import ReactDOM from 'react-dom/client'
 import { DanmakuEngine } from '../../danmaku-engine'
+import { TMode } from '../../types'
 import { PlatformStrategy } from '../strategy.interface'
 import StyleEditorTrigger from './StyleEditorTrigger'
-import { TMode } from '../../types'
 
 import './index.css'
 
