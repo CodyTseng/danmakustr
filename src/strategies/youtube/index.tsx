@@ -33,9 +33,13 @@ export class YoutubeStrategy implements PlatformStrategy {
   }
 
   addDanmakuControl(danmakuEngine: DanmakuEngine) {
-    const oldDanmakuControls = document.getElementById('danmaku-controls')
-    if (oldDanmakuControls) {
-      oldDanmakuControls.remove()
+    // remove the old danmaku control
+    this.removeDanmakuControl()
+
+    const liveBadge = document.getElementsByClassName('ytp-live-badge')[0]
+    if (liveBadge && this.checkIsLiveByLiveBadge(liveBadge)) {
+      console.debug('is live')
+      return
     }
 
     const aboveTheFold = document.getElementById('above-the-fold')
@@ -53,6 +57,18 @@ export class YoutubeStrategy implements PlatformStrategy {
         <DanmakuControl danmakuEngine={danmakuEngine} />
       </StrictMode>,
     )
+  }
+
+  private removeDanmakuControl() {
+    const danmakuControls = document.getElementById('danmaku-controls')
+    if (danmakuControls) {
+      danmakuControls.remove()
+    }
+  }
+
+  private checkIsLiveByLiveBadge(liveBadge: Element) {
+    const style = window.getComputedStyle(liveBadge)
+    return style.display !== 'none'
   }
 }
 
