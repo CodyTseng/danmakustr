@@ -8,7 +8,7 @@ Since there are not many users at the moment, there are also few danmakus. So I 
 
 ## Screenshot
 
-![screenshot](./screenshot.png)
+![screenshot](./screenshot.jpg)
 
 ## Install
 

@@ -6,7 +6,7 @@
 
 ## 截图
 
-![screenshot](./screenshot.png)
+![screenshot](./screenshot.jpg)
 
 ## 安装
 
