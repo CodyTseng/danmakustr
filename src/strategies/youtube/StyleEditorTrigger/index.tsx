@@ -17,7 +17,7 @@ const recommendedColors = [
   '#019899',
   '#4266BE',
   '#89D5FF',
-  '#F19EC2',
+  '#DB9CFF',
   '#8E30EB',
   '#222222',
   '#FFFFFF',
@@ -100,7 +100,7 @@ export function StyleEditor({
             <div
               key={m}
               className="mode-selector"
-              style={{ color: mode === m ? '#F19EC2' : 'gray' }}
+              style={{ color: mode === m ? '#DB9CFF' : 'gray' }}
               onClick={() => handleModeSelectorClicked(m)}
             >
               {icon}
