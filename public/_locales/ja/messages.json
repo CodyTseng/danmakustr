@@ -1,9 +1,9 @@
 {
   "extension_name": {
-    "message": "danmakustr - 分散型コメント流し機能"
+    "message": "danmakustr - YouTube 弾幕コメント (danmaku / danmu)"
   },
   "extension_description": {
-    "message": "分散型のコメント流し機能を提供する拡張機能、YouTubeに対応"
+    "message": "YouTubeに対応した分散型弾幕コメント拡張機能です。あなたのコメントは、中央集権型サーバーではなく、指定したサーバーに送信・保存されます"
   },
   "relays": {
     "message": "リレー"

@@ -1,9 +1,9 @@
 {
   "extension_name": {
-    "message": "danmakustr - decentralized danmaku extension"
+    "message": "danmakustr - YouTube Floating Comments (danmaku / danmu / 弹幕)"
   },
   "extension_description": {
-    "message": "A decentralized danmaku extension, supporting YouTube"
+    "message": "A decentralized floating comment extension for YouTube. Comments are stored on servers you specify, not on a central server."
   },
   "relays": {
     "message": "Relays"

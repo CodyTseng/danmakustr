@@ -1,9 +1,9 @@
 {
   "extension_name": {
-    "message": "danmakustr - 去中心化弹幕插件"
+    "message": "danmakustr - YouTube 弹幕 (danmaku / danmu)"
   },
   "extension_description": {
-    "message": "一款去中心化的弹幕插件，支持 YouTube"
+    "message": "一款去中心化的弹幕插件，支持 YouTube。您的弹幕被发送并存储在您指定的服务器上，而非依赖某个中心化服务器。"
   },
   "relays": {
     "message": "弹夹"
