@@ -1,4 +1,10 @@
 {
+  "extension_name": {
+    "message": "danmakustr - decentralized danmaku extension"
+  },
+  "extension_description": {
+    "message": "A decentralized danmaku extension, supporting YouTube"
+  },
   "relays": {
     "message": "Relays"
   },

@@ -1,4 +1,10 @@
 {
+  "extension_name": {
+    "message": "danmakustr - 去中心化弹幕插件"
+  },
+  "extension_description": {
+    "message": "一款去中心化的弹幕插件，支持 YouTube"
+  },
   "relays": {
     "message": "弹夹"
   },

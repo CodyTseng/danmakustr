@@ -5,8 +5,8 @@ import packageData from '../package.json'
 const isDev = process.env.NODE_ENV == 'development'
 
 export default defineManifest({
-  name: `${packageData.displayName || packageData.name}${isDev ? ` ➡️ Dev` : ''}`,
-  description: packageData.description,
+  name: '__MSG_extension_name__' + (isDev ? ` ➡️ Dev` : ''),
+  description: '__MSG_extension_description__',
   version: packageData.version,
   manifest_version: 3,
   icons: {
