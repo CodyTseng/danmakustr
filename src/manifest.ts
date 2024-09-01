@@ -35,4 +35,5 @@ export default defineManifest({
     },
   ],
   permissions: ['storage', 'tabs'],
+  default_locale: 'en',
 })

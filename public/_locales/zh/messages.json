@@ -1,0 +1,36 @@
+{
+  "relays": {
+    "message": "弹夹"
+  },
+  "add": {
+    "message": "添加"
+  },
+  "mode": {
+    "message": "模式"
+  },
+  "color": {
+    "message": "颜色"
+  },
+  "scroll": {
+    "message": "滚动"
+  },
+  "top": {
+    "message": "顶部"
+  },
+  "bottom": {
+    "message": "底部"
+  },
+  "send": {
+    "message": "发送"
+  },
+  "hide_danmaku": {
+    "message": "隐藏弹幕"
+  },
+  "show_danmaku": {
+    "message": "显示弹幕"
+  },
+  "danmaku_input_placeholder": {
+    "message": "发个弹幕分享当下的心情",
+    "description": "弹幕输入框的占位符文本"
+  }
+}

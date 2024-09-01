@@ -158,7 +158,15 @@ function DanmakuControl({ danmakuEngine }: { danmakuEngine: DanmakuEngine }): JS
 
   return (
     <>
-      <button onClick={handleSwitchChange} className="danmaku-button-secondary">
+      <button
+        onClick={handleSwitchChange}
+        className="danmaku-button-secondary"
+        title={
+          switchValue
+            ? chrome.i18n.getMessage('hide_danmaku')
+            : chrome.i18n.getMessage('show_danmaku')
+        }
+      >
         {switchValue ? (
           <MessageSquareText size={16} strokeWidth={3} />
         ) : (
@@ -174,7 +182,7 @@ function DanmakuControl({ danmakuEngine }: { danmakuEngine: DanmakuEngine }): JS
         />
         <input
           className="danmaku-input"
-          placeholder="Send a danmaku comment"
+          placeholder={chrome.i18n.getMessage('danmaku_input_placeholder')}
           value={inputValue}
           disabled={!switchValue}
           onChange={handleInputChange}
@@ -183,7 +191,7 @@ function DanmakuControl({ danmakuEngine }: { danmakuEngine: DanmakuEngine }): JS
         />
       </div>
       <button onClick={handleSubmit} disabled={!switchValue} className="danmaku-button-primary">
-        Send
+        {chrome.i18n.getMessage('send')}
       </button>
     </>
   )

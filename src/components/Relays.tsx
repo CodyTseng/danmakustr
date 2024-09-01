@@ -65,7 +65,7 @@ export default function Relays() {
 
   return (
     <div className="space-y-4 py-4 px-2">
-      <div className="text-3xl font-medium text-primary">Relays</div>
+      <div className="text-3xl font-medium text-primary">{chrome.i18n.getMessage('relays')}</div>
       <div className="space-y-2">
         {relays.map((relay) => (
           <Relay key={relay.url} relay={relay} remove={removeRelay} />
@@ -80,7 +80,7 @@ export default function Relays() {
             onKeyDown={handleNewRelayUrlInputKeyDown}
             className={newRelayUrlInputError ? 'border-destructive' : ''}
           />
-          <Button onClick={addRelay}>Add</Button>
+          <Button onClick={addRelay}>{chrome.i18n.getMessage('add')}</Button>
         </div>
         {newRelayUrlInputError && (
           <div className="text-destructive pl-3">{newRelayUrlInputError}</div>

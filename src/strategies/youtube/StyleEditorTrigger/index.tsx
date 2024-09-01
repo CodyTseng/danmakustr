@@ -1,6 +1,6 @@
 import { BottomDanmakuIcon, ScrollDanmakuIcon, TopDanmakuIcon } from '@/components/icon'
 import * as HoverCard from '@radix-ui/react-hover-card'
-import { Settings2 } from 'lucide-react'
+import { Palette, Settings2 } from 'lucide-react'
 import { ChangeEvent, ReactElement } from 'react'
 import { TMode } from '../../../types'
 
@@ -25,13 +25,17 @@ const recommendedColors = [
 
 const modes: { name: string; mode: TMode; icon: ReactElement }[] = [
   {
-    name: 'Scroll',
+    name: chrome.i18n.getMessage('scroll'),
     mode: 'rtl',
     icon: <ScrollDanmakuIcon style={{ width: '3rem', height: '3rem' }} />,
   },
-  { name: 'Top', mode: 'top', icon: <TopDanmakuIcon style={{ width: '3rem', height: '3rem' }} /> },
   {
-    name: 'Bottom',
+    name: chrome.i18n.getMessage('top'),
+    mode: 'top',
+    icon: <TopDanmakuIcon style={{ width: '3rem', height: '3rem' }} />,
+  },
+  {
+    name: chrome.i18n.getMessage('bottom'),
     mode: 'bottom',
     icon: <BottomDanmakuIcon style={{ width: '3rem', height: '3rem' }} />,
   },
@@ -51,7 +55,7 @@ export default function StyleEditorTrigger({
   return (
     <HoverCard.Root>
       <HoverCard.Trigger className="style-editor-trigger">
-        <Settings2 size={18} strokeWidth={3} />
+        <Palette size={18} strokeWidth={3} />
       </HoverCard.Trigger>
       <HoverCard.Portal>
         <HoverCard.Content sideOffset={10} collisionPadding={10} style={{ zIndex: 9999 }}>
@@ -94,7 +98,7 @@ export function StyleEditor({
   return (
     <div className="style-editor-content">
       <div>
-        <div className="style-editor-content-section-title">Mode</div>
+        <div className="style-editor-content-section-title">{chrome.i18n.getMessage('mode')}</div>
         <div style={{ display: 'flex', gap: '2rem' }}>
           {modes.map(({ name, mode: m, icon }) => (
             <div
@@ -110,7 +114,7 @@ export function StyleEditor({
         </div>
       </div>
       <div>
-        <div className="style-editor-content-section-title">Color</div>
+        <div className="style-editor-content-section-title">{chrome.i18n.getMessage('color')}</div>
         <div style={{ display: 'flex', gap: '1rem' }}>
           <input
             onChange={handleColorInputChanged}
