@@ -1,0 +1,42 @@
+{
+  "extension_name": {
+    "message": "danmakustr - 去中心化彈幕插件"
+  },
+  "extension_description": {
+    "message": "一款去中心化的彈幕插件，支援 YouTube"
+  },
+  "relays": {
+    "message": "彈匣"
+  },
+  "add": {
+    "message": "新增"
+  },
+  "mode": {
+    "message": "模式"
+  },
+  "color": {
+    "message": "顏色"
+  },
+  "scroll": {
+    "message": "滾動"
+  },
+  "top": {
+    "message": "頂部"
+  },
+  "bottom": {
+    "message": "底部"
+  },
+  "send": {
+    "message": "發送"
+  },
+  "hide_danmaku": {
+    "message": "隱藏彈幕"
+  },
+  "show_danmaku": {
+    "message": "顯示彈幕"
+  },
+  "danmaku_input_placeholder": {
+    "message": "發個彈幕分享當下的心情",
+    "description": "彈幕輸入框的佔位符文字"
+  }
+}

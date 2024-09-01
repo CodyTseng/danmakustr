@@ -1,0 +1,42 @@
+{
+  "extension_name": {
+    "message": "danmakustr - 分散型コメント流し機能"
+  },
+  "extension_description": {
+    "message": "分散型のコメント流し機能を提供する拡張機能、YouTubeに対応"
+  },
+  "relays": {
+    "message": "リレー"
+  },
+  "add": {
+    "message": "追加"
+  },
+  "mode": {
+    "message": "モード"
+  },
+  "color": {
+    "message": "色"
+  },
+  "scroll": {
+    "message": "スクロール"
+  },
+  "top": {
+    "message": "上"
+  },
+  "bottom": {
+    "message": "下"
+  },
+  "send": {
+    "message": "送信"
+  },
+  "hide_danmaku": {
+    "message": "コメントを非表示"
+  },
+  "show_danmaku": {
+    "message": "コメントを表示"
+  },
+  "danmaku_input_placeholder": {
+    "message": "今の気持ちをコメントで共有しよう",
+    "description": "コメント入力欄のプレースホルダーテキスト"
+  }
+}
