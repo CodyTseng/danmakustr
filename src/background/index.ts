@@ -13,8 +13,6 @@ type InitMsg = { type: 'INIT_COMMENTS'; id: string }
 type GetRelaysMsg = { type: 'GET_RELAYS' }
 type Msg = SendCommentMsg | InitMsg | GetRelaysMsg
 
-type DanmakuStyle = { mode?: TMode; color?: string }
-
 let queue: {
   message: Msg
   sender: chrome.runtime.MessageSender
@@ -86,20 +84,15 @@ async function processMessage(
     const { comment, time, id, mode, color } = message
     console.debug('Emitting comment:', comment, time)
 
-    const style: DanmakuStyle = {}
-    if (mode) {
-      style.mode = mode
-    }
-    if (color) {
-      style.color = color
-    }
-
     const tags = [
       ['i', id],
       ['time', time.toString()],
     ]
-    if (style.mode || style.color) {
-      tags.push(['style', JSON.stringify(style)])
+    if (mode) {
+      tags.push(['mode', mode])
+    }
+    if (color) {
+      tags.push(['color', color])
     }
 
     const event = new NDKEvent(ndk, {
@@ -131,24 +124,12 @@ async function processMessage(
 
       events.forEach((event) => {
         const comment = event.content
-        const time = parseFloat(event.tags.find((tag) => tag[0] === 'time')?.[1] ?? '0')
-        let style: DanmakuStyle = {}
-        try {
-          const customStyle = JSON.parse(event.tags.find((tag) => tag[0] === 'style')?.[1] ?? '{}')
-          if (customStyle.mode && ['rtl', 'top', 'bottom'].includes(customStyle.mode)) {
-            style.mode = customStyle.mode
-          }
-          if (customStyle.color && /^#[0-9a-fA-F]{6}$/.test(customStyle.color)) {
-            style.color = customStyle.color
-          }
-        } catch {
-          // do nothing
-        }
+        const { time, mode, color } = parseEventTags(event)
         chrome.tabs.sendMessage(sender.tab!.id!, {
           type: 'EMIT_INIT_COMMENT',
           comment,
-          mode: style.mode,
-          color: style.color,
+          mode,
+          color,
           time,
           self: event.pubkey === pubkey,
           id,
@@ -198,4 +179,23 @@ chrome.storage.onChanged.addListener(async (changes) => {
 
 function normalizeUrl(url: string) {
   return url.endsWith('/') ? url : url + '/'
+}
+
+function parseEventTags(event: NDKEvent) {
+  let time: number = 0
+  let mode: TMode | undefined
+  let color: string | undefined
+  event.tags.forEach(([tagName, tagValue]) => {
+    if (tagName === 'time' && tagValue) {
+      const parsedTime = parseFloat(tagValue)
+      if (!isNaN(parsedTime)) {
+        time = parsedTime
+      }
+    } else if (tagName === 'mode' && ['rtl', 'top', 'bottom'].includes(tagValue)) {
+      mode = tagValue as TMode
+    } else if (tagName === 'color' && /^#[0-9a-fA-F]{6}$/.test(tagValue)) {
+      color = tagValue.toUpperCase()
+    }
+  })
+  return { time, mode, color }
 }
