@@ -1,0 +1,36 @@
+{
+  "relays": {
+    "message": "Relays"
+  },
+  "add": {
+    "message": "Add"
+  },
+  "mode": {
+    "message": "Mode"
+  },
+  "color": {
+    "message": "Color"
+  },
+  "scroll": {
+    "message": "Scroll"
+  },
+  "top": {
+    "message": "Top"
+  },
+  "bottom": {
+    "message": "Bottom"
+  },
+  "send": {
+    "message": "Send"
+  },
+  "hide_danmaku": {
+    "message": "Hide danmaku"
+  },
+  "show_danmaku": {
+    "message": "Show danmaku"
+  },
+  "danmaku_input_placeholder": {
+    "message": "Send a danmaku comment to share how you're feeling right now",
+    "description": "Placeholder text for the danmaku input field"
+  }
+}
