@@ -1,7 +1,22 @@
-import { createRoot } from 'react-dom/client'
-import Options from './Options'
 import '../index.css'
-import { ThemeProvider } from '@/components/theme-provider'
+
+import Relays from '@/pages/Relays'
+import React from 'react'
+import { createRoot } from 'react-dom/client'
+import { RouterProvider, createHashRouter } from 'react-router-dom'
+import Options from './Options'
+import Account from '@/pages/Account'
+
+const router = createHashRouter([
+  {
+    path: '/',
+    element: <Options />,
+    children: [
+      { index: true, element: <Relays /> },
+      { path: '/account', element: <Account /> },
+    ],
+  },
+])
 
 function init() {
   const appContainer = document.querySelector('#app-container')
@@ -10,11 +25,9 @@ function init() {
   }
   const root = createRoot(appContainer)
   root.render(
-    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-      <div className="flex flex-col items-center h-screen pt-8 bg-background text-foreground">
-        <Options />
-      </div>
-    </ThemeProvider>,
+    <React.StrictMode>
+      <RouterProvider router={router} />
+    </React.StrictMode>,
   )
 }
 

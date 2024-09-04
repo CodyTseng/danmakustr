@@ -1,7 +1,22 @@
-import { ThemeProvider } from '@/components/theme-provider'
-import { createRoot } from 'react-dom/client'
 import '../index.css'
+
+import Relays from '@/pages/Relays'
+import React from 'react'
+import { createRoot } from 'react-dom/client'
+import { RouterProvider, createHashRouter } from 'react-router-dom'
 import Popup from './Popup'
+import Account from '@/pages/Account'
+
+const router = createHashRouter([
+  {
+    path: '/',
+    element: <Popup />,
+    children: [
+      { index: true, element: <Relays /> },
+      { path: '/account', element: <Account /> },
+    ],
+  },
+])
 
 function init() {
   const appContainer = document.querySelector('#app-container')
@@ -10,11 +25,9 @@ function init() {
   }
   const root = createRoot(appContainer)
   root.render(
-    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-      <div className="flex flex-col items-center w-[400px] h-[400px] bg-background text-foreground">
-        <Popup />
-      </div>
-    </ThemeProvider>,
+    <React.StrictMode>
+      <RouterProvider router={router} />
+    </React.StrictMode>,
   )
 }
 

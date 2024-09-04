@@ -64,7 +64,7 @@ export default function Relays() {
   }
 
   return (
-    <div className="space-y-4 py-4 px-2">
+    <div className="space-y-4">
       <div className="text-3xl font-medium text-primary">{chrome.i18n.getMessage('relays')}</div>
       <div className="space-y-2">
         {relays.map((relay) => (
