@@ -13,8 +13,8 @@ export default function Popup() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <div className="flex flex-col items-center w-[350px] h-[500px] bg-background text-foreground">
-        <ScrollArea className="flex-1 w-full text-base">
-          <div className="py-4 px-6">
+        <ScrollArea className="flex-1 w-[350px] text-base">
+          <div className="py-4 px-6 w-[350px]">
             <Outlet />
           </div>
         </ScrollArea>
