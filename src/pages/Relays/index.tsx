@@ -64,7 +64,7 @@ export default function Relays() {
   }
 
   return (
-    <div className="space-y-4 py-4 px-2">
+    <div className="space-y-4">
       <div className="text-3xl font-medium text-primary">{chrome.i18n.getMessage('relays')}</div>
       <div className="space-y-2">
         {relays.map((relay) => (
@@ -95,7 +95,7 @@ function Relay({ relay, remove }: { relay: TRelay; remove: (url: string) => void
   const url = new URL(relayUrl)
   return (
     <div className="flex justify-between items-center hover:text-primary">
-      <div className="flex items-center gap-2">
+      <div className="flex flex-1 w-0 items-center gap-2">
         <Avatar
           className={
             'w-6 h-6 border-2 border-solid ' +
@@ -105,7 +105,7 @@ function Relay({ relay, remove }: { relay: TRelay; remove: (url: string) => void
           <AvatarImage src={getFaviconUrl(url)} />
           <AvatarFallback>{url.host.slice(0, 2).toUpperCase()}</AvatarFallback>
         </Avatar>
-        <div>{relayUrl}</div>
+        <div className="truncate">{relayUrl}</div>
       </div>
       <Button className="w-6 h-6 p-0" variant="ghost" onClick={() => remove(relayUrl)}>
         <Trash2 size={14} className="text-destructive" />

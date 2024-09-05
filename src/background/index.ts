@@ -1,5 +1,7 @@
 import { TMode } from '@/types'
+import { bytesToHex, hexToBytes } from '@noble/hashes/utils'
 import NDK, { NDKEvent, NDKPrivateKeySigner, NDKRelay } from '@nostr-dev-kit/ndk'
+import { generateSecretKey, getPublicKey } from 'nostr-tools'
 
 type SendCommentMsg = {
   type: 'SEND_COMMENT'
@@ -20,34 +22,30 @@ let queue: {
 }[] = []
 let ndk: NDK | null = null
 let pubkey: string | null = null
-let signer: NDKPrivateKeySigner = NDKPrivateKeySigner.generate()
+let relayUrls: string[] = [
+  'wss://nostr-relay.app/',
+  'wss://relay.damus.io/',
+  'wss://relay.nostr.band/',
+  'wss://nos.lol/',
+  'wss://nostr.bitcoiner.social/',
+  'wss://relay.snort.social/',
+]
 
 async function main() {
-  let { privateKey, relayUrls } = await chrome.storage.local.get(['privateKey', 'relayUrls'])
-  if (!relayUrls) {
-    relayUrls = [
-      'wss://nostr-relay.app/',
-      'wss://relay.damus.io/',
-      'wss://relay.nostr.band/',
-      'wss://nos.lol/',
-      'wss://nostr.bitcoiner.social/',
-      'wss://relay.snort.social/',
-    ]
+  let { privateKey, relayUrls: localRelayUrls } = await chrome.storage.local.get([
+    'privateKey',
+    'relayUrls',
+  ])
+  if (!localRelayUrls) {
     await chrome.storage.local.set({
       relayUrls,
     })
-  }
-  if (privateKey) {
-    signer = new NDKPrivateKeySigner(privateKey)
   } else {
-    await chrome.storage.local.set({ privateKey: signer.privateKey })
+    relayUrls = localRelayUrls
   }
 
-  console.debug('block until ready...')
-  const user = await signer.blockUntilReady()
-  console.debug('pubkey', user.pubkey)
-  pubkey = user.pubkey
-  ndk = await createNDK(signer, relayUrls)
+  await initializeNDK(relayUrls, privateKey)
+
   if (queue.length) {
     console.debug('Processing queue...')
     await Promise.allSettled(
@@ -60,14 +58,26 @@ async function main() {
 }
 main()
 
-async function createNDK(signer: NDKPrivateKeySigner, relayUrls: string[]) {
-  const ndk = new NDK({
+function generatePrivateKey() {
+  let sk = generateSecretKey()
+  return bytesToHex(sk)
+}
+
+async function initializeNDK(relayUrls: string[], privateKey?: string) {
+  console.debug('Initializing NDK...')
+  if (!privateKey) {
+    privateKey = generatePrivateKey()
+    await chrome.storage.local.set({ privateKey })
+  }
+  const signer = new NDKPrivateKeySigner(privateKey)
+  pubkey = getPublicKey(hexToBytes(privateKey))
+  console.debug('Pubkey', pubkey)
+  ndk = new NDK({
     explicitRelayUrls: relayUrls,
     signer,
   })
   await ndk.connect(5000)
   console.debug('NDK connected')
-  return ndk
 }
 
 async function processMessage(
@@ -166,14 +176,22 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
 chrome.storage.onChanged.addListener(async (changes) => {
   if (changes.relayUrls && ndk) {
     const { newValue = [], oldValue = [] } = changes.relayUrls
+    relayUrls = newValue
     const added = newValue.filter((url: string) => !oldValue.includes(url))
     const removed = oldValue.filter((url: string) => !newValue.includes(url))
     added.forEach((url: string) => {
       ndk!.pool.addRelay(new NDKRelay(url), true)
+      console.debug('Added relay:', url)
     })
     removed.forEach((url: string) => {
       ndk!.pool.removeRelay(normalizeUrl(url))
+      console.debug('Removed relay:', url)
     })
+  }
+  if (changes.privateKey) {
+    const { newValue: newPrivateKey, oldValue: oldPrivateKey } = changes.privateKey
+    if (!newPrivateKey || !oldPrivateKey || newPrivateKey === oldPrivateKey) return
+    await initializeNDK(relayUrls, newPrivateKey)
   }
 })
 

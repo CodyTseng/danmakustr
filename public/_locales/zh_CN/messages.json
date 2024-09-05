@@ -8,6 +8,9 @@
   "relays": {
     "message": "弹夹"
   },
+  "account": {
+    "message": "账户"
+  },
   "add": {
     "message": "添加"
   },
@@ -38,5 +41,38 @@
   "danmaku_input_placeholder": {
     "message": "发个弹幕分享当下的心情",
     "description": "弹幕输入框的占位符文本"
+  },
+  "public_key": {
+    "message": "公钥"
+  },
+  "private_key": {
+    "message": "私钥"
+  },
+  "login_with_private_key": {
+    "message": "使用私钥登录"
+  },
+  "login": {
+    "message": "登录"
+  },
+  "private_key_input_placeholder": {
+    "message": "输入您的私钥 (nsec)"
+  },
+  "invalid_private_key": {
+    "message": "无效的私钥"
+  },
+  "generate_random_account": {
+    "message": "生成随机账户"
+  },
+  "generate_random_account_dialog_title": {
+    "message": "您确定吗？"
+  },
+  "generate_random_account_dialog_description": {
+    "message": "随机生成的账户将覆盖当前帐户，如果您没有备份当前帐户的私钥，您将永远失去对当前帐户的访问权限。您确定要继续吗？"
+  },
+  "cancel": {
+    "message": "取消"
+  },
+  "continue": {
+    "message": "继续"
   }
 }

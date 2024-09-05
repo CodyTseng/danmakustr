@@ -8,6 +8,9 @@
   "relays": {
     "message": "彈匣"
   },
+  "account": {
+    "message": "帳戶"
+  },
   "add": {
     "message": "新增"
   },
@@ -38,5 +41,38 @@
   "danmaku_input_placeholder": {
     "message": "發個彈幕分享當下的心情",
     "description": "彈幕輸入框的佔位符文字"
+  },
+  "public_key": {
+    "message": "公鑰"
+  },
+  "private_key": {
+    "message": "私鑰"
+  },
+  "login_with_private_key": {
+    "message": "使用私鑰登入"
+  },
+  "login": {
+    "message": "登入"
+  },
+  "private_key_input_placeholder": {
+    "message": "輸入您的私鑰 (nsec)"
+  },
+  "invalid_private_key": {
+    "message": "無效的私鑰"
+  },
+  "cancel": {
+    "message": "取消"
+  },
+  "continue": {
+    "message": "繼續"
+  },
+  "generate_random_account": {
+    "message": "生成隨機帳戶"
+  },
+  "generate_random_account_dialog_title": {
+    "message": "您確定要這麼做嗎？"
+  },
+  "generate_random_account_dialog_description": {
+    "message": "如果您生成新帳戶，它將覆蓋目前的帳戶。如果您尚未備份目前帳戶的私鑰，您將永久失去對該帳戶的存取權限。您確定要繼續嗎？"
   }
 }
