@@ -13,12 +13,12 @@ type SendCommentMsg = {
 }
 type InitMsg = { type: 'INIT_COMMENTS'; id: string }
 type GetRelaysMsg = { type: 'GET_RELAYS' }
-type Msg = SendCommentMsg | InitMsg | GetRelaysMsg
+type FetchHistoryComments = { type: 'FETCH_HISTORY_COMMENTS'; until?: number; limit?: number }
+type Msg = SendCommentMsg | InitMsg | GetRelaysMsg | FetchHistoryComments
 
 let queue: {
   message: Msg
   sender: chrome.runtime.MessageSender
-  sendResponse: (response?: any) => void
 }[] = []
 let ndk: NDK | null = null
 let pubkey: string | null = null
@@ -48,11 +48,7 @@ async function main() {
 
   if (queue.length) {
     console.debug('Processing queue...')
-    await Promise.allSettled(
-      queue.map(({ message, sender, sendResponse }) =>
-        processMessage(message, sender, sendResponse),
-      ),
-    )
+    await Promise.allSettled(queue.map(({ message, sender }) => processMessage(message, sender)))
     queue = []
   }
 }
@@ -80,13 +76,10 @@ async function initializeNDK(relayUrls: string[], privateKey?: string) {
   console.debug('NDK connected')
 }
 
-async function processMessage(
-  message: Msg,
-  sender: chrome.runtime.MessageSender,
-  sendResponse: (response?: any) => void,
-) {
+async function processMessage(message: Msg, sender: chrome.runtime.MessageSender) {
   if (!ndk || !pubkey) {
-    queue.push({ message, sender, sendResponse })
+    // FIXME: not a good way
+    queue.push({ message, sender })
     return
   }
 
@@ -159,12 +152,35 @@ async function processMessage(
         connected: relay.connected,
       })
     })
-    sendResponse(relays)
+    return relays
+  } else if (message.type === 'FETCH_HISTORY_COMMENTS') {
+    const { until = Math.floor(Date.now() / 1000), limit = 20 } = message
+    const events = await ndk.fetchEvents({
+      kinds: [2333 as any],
+      authors: [pubkey],
+      limit,
+      until,
+    })
+    return Array.from(events)
+      .map((event) => {
+        const { time, videoId, platform } = parseEventTags(event)
+        if (!videoId) return null
+        return {
+          id: event.id,
+          content: event.content,
+          time,
+          platform,
+          videoId,
+          createdAt: event.created_at,
+        }
+      })
+      .filter(Boolean)
   }
 }
 
-chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-  await processMessage(message, sender, sendResponse)
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  processMessage(message, sender).then(sendResponse)
+  return true
 })
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
@@ -203,6 +219,8 @@ function parseEventTags(event: NDKEvent) {
   let time: number = 0
   let mode: TMode | undefined
   let color: string | undefined
+  let videoId: string | undefined
+  let platform: string | undefined
   event.tags.forEach(([tagName, tagValue]) => {
     if (tagName === 'time' && tagValue) {
       const parsedTime = parseFloat(tagValue)
@@ -213,7 +231,9 @@ function parseEventTags(event: NDKEvent) {
       mode = tagValue as TMode
     } else if (tagName === 'color' && /^#[0-9a-fA-F]{6}$/.test(tagValue)) {
       color = tagValue.toUpperCase()
+    } else if (tagName === 'i' && tagValue) {
+      ;[platform, videoId] = tagValue.split(':')
     }
   })
-  return { time, mode, color }
+  return { time, mode, color, videoId, platform }
 }

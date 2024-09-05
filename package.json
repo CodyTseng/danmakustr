@@ -34,6 +34,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "danmaku": "^2.0.6",
+    "lodash": "^4.17.21",
     "lucide-react": "^0.368.0",
     "nostr-tools": "^2.7.2",
     "react": "^18.2.0",
@@ -46,6 +47,7 @@
   "devDependencies": {
     "@crxjs/vite-plugin": "^2.0.0-beta.19",
     "@types/chrome": "^0.0.246",
+    "@types/lodash": "^4.17.7",
     "@types/node": "^20.12.7",
     "@types/react": "^18.2.28",
     "@types/react-dom": "^18.2.13",

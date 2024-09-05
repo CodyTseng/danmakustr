@@ -1,11 +1,12 @@
 import { Nav } from '@/components/Nav'
 import { ThemeProvider } from '@/components/theme-provider'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Server, UserRound } from 'lucide-react'
+import { History, Server, UserRound } from 'lucide-react'
 import { Outlet } from 'react-router-dom'
 
 const navItems = [
-  { name: chrome.i18n.getMessage('relays'), icon: <Server />, href: '/' },
+  { name: 'History', icon: <History />, href: '/' },
+  { name: chrome.i18n.getMessage('relays'), icon: <Server />, href: '/relays' },
   { name: chrome.i18n.getMessage('account'), icon: <UserRound />, href: '/account' },
 ]
 
