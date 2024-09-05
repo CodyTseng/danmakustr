@@ -1,11 +1,11 @@
 import '../index.css'
 
-import Relays from '@/pages/Relays'
+import Account from '@/pages/Account/index'
+import Relays from '@/pages/Relays/index'
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { RouterProvider, createHashRouter } from 'react-router-dom'
 import Options from './Options'
-import Account from '@/pages/Account'
 
 const router = createHashRouter([
   {

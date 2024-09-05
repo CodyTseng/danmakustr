@@ -1,8 +1,8 @@
+import { Nav } from '@/components/Nav'
 import { ThemeProvider } from '@/components/theme-provider'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Server, UserRound } from 'lucide-react'
 import { Outlet } from 'react-router-dom'
-import { Nav } from '@/components/Nav'
 
 const navItems = [
   { name: 'Relays', icon: <Server />, href: '/' },

@@ -1,10 +1,10 @@
+import './index.css'
+
 import { BottomDanmakuIcon, ScrollDanmakuIcon, TopDanmakuIcon } from '@/components/icon'
 import * as HoverCard from '@radix-ui/react-hover-card'
-import { Palette, Settings2 } from 'lucide-react'
+import { Palette } from 'lucide-react'
 import { ChangeEvent, ReactElement } from 'react'
 import { TMode } from '../../../types'
-
-import './index.css'
 
 const recommendedColors = [
   '#FE0302',
@@ -17,8 +17,8 @@ const recommendedColors = [
   '#019899',
   '#4266BE',
   '#89D5FF',
-  '#DB9CFF',
-  '#8E30EB',
+  '#F7B5CA',
+  '#C68EE6',
   '#222222',
   '#FFFFFF',
 ]
@@ -104,7 +104,7 @@ export function StyleEditor({
             <div
               key={m}
               className="mode-selector"
-              style={{ color: mode === m ? '#DB9CFF' : 'gray' }}
+              style={{ color: mode === m ? '#C68EE6' : 'gray' }}
               onClick={() => handleModeSelectorClicked(m)}
             >
               {icon}

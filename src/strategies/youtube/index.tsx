@@ -1,3 +1,5 @@
+import './index.css'
+
 import { MessageSquareOff, MessageSquareText } from 'lucide-react'
 import { ChangeEvent, KeyboardEvent, StrictMode, useEffect, useState } from 'react'
 import ReactDOM from 'react-dom/client'
@@ -5,8 +7,6 @@ import { DanmakuEngine } from '../../danmaku-engine'
 import { TMode } from '../../types'
 import { PlatformStrategy } from '../strategy.interface'
 import StyleEditorTrigger from './StyleEditorTrigger'
-
-import './index.css'
 
 export class YoutubeStrategy implements PlatformStrategy {
   extractId(url: string) {
@@ -48,7 +48,6 @@ export class YoutubeStrategy implements PlatformStrategy {
     }
 
     const danmakuControl = document.createElement('div')
-    danmakuControl.className = 'flex w-full items-center'
     danmakuControl.id = 'danmaku-controls'
     aboveTheFold.insertBefore(danmakuControl, aboveTheFold.firstChild)
 
