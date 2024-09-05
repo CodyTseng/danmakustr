@@ -36,10 +36,10 @@ export default function LoginWithNsec({
         handleLoginWithNsec(bytesToHex(data as Uint8Array))
         setOpen(false)
       } else {
-        setNsecError('Invalid private key')
+        setNsecError(chrome.i18n.getMessage('invalid_private_key'))
       }
     } catch {
-      setNsecError('Invalid private key')
+      setNsecError(chrome.i18n.getMessage('invalid_private_key'))
     }
   }
 
@@ -47,17 +47,19 @@ export default function LoginWithNsec({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger className="flex w-full">
         <Button variant="secondary" className="w-full">
-          Login with Private Key
+          {chrome.i18n.getMessage('login_with_private_key')}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-left">Login with Private Key</DialogTitle>
+          <DialogTitle className="text-left">
+            {chrome.i18n.getMessage('login_with_private_key')}
+          </DialogTitle>
           <DialogDescription className="pt-2">
             <div className="flex gap-2 items-center">
               <Input
                 type={showNsec ? 'text' : 'password'}
-                placeholder="Enter your private key (nsec)"
+                placeholder={chrome.i18n.getMessage('private_key_input_placeholder')}
                 value={nsec}
                 onChange={handleInputChange}
                 className={nsecError ? 'border-red-500' : ''}
@@ -68,7 +70,7 @@ export default function LoginWithNsec({
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button onClick={handleLogin}>Login</Button>
+          <Button onClick={handleLogin}>{chrome.i18n.getMessage('login')}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

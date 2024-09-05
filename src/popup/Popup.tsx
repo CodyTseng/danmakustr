@@ -5,8 +5,8 @@ import { Server, UserRound } from 'lucide-react'
 import { Outlet } from 'react-router-dom'
 
 const navItems = [
-  { name: 'Relays', icon: <Server />, href: '/' },
-  { name: 'Account', icon: <UserRound />, href: '/account' },
+  { name: chrome.i18n.getMessage('relays'), icon: <Server />, href: '/' },
+  { name: chrome.i18n.getMessage('account'), icon: <UserRound />, href: '/account' },
 ]
 
 export default function Popup() {

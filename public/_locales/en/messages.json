@@ -8,6 +8,9 @@
   "relays": {
     "message": "Relays"
   },
+  "account": {
+    "message": "Account"
+  },
   "add": {
     "message": "Add"
   },
@@ -38,5 +41,38 @@
   "danmaku_input_placeholder": {
     "message": "Send a danmaku comment to share how you're feeling right now",
     "description": "Placeholder text for the danmaku input field"
+  },
+  "public_key": {
+    "message": "Public key"
+  },
+  "private_key": {
+    "message": "Private key"
+  },
+  "login_with_private_key": {
+    "message": "Login with Private Key"
+  },
+  "login": {
+    "message": "Login"
+  },
+  "private_key_input_placeholder": {
+    "message": "Enter your private key (nsec)"
+  },
+  "invalid_private_key": {
+    "message": "Invalid private key"
+  },
+  "cancel": {
+    "message": "Cancel"
+  },
+  "continue": {
+    "message": "Continue"
+  },
+  "generate_random_account": {
+    "message": "Generate Random Account"
+  },
+  "generate_random_account_dialog_title": {
+    "message": "Are you absolutely sure?"
+  },
+  "generate_random_account_dialog_description": {
+    "message": "If you generate a new account, it will overwrite the current account. If you haven't backed up the private key of the current account, you will permanently lose access to it. Are you sure you want to continue?"
   }
 }

@@ -51,9 +51,9 @@ export default function Account() {
 
   return (
     <div>
-      <div className="text-3xl font-medium text-primary">Account</div>
+      <div className="text-3xl font-medium text-primary">{chrome.i18n.getMessage('account')}</div>
       <div className="space-y-1 mt-4">
-        <div className="font-bold">Public key</div>
+        <div className="font-bold">{chrome.i18n.getMessage('public_key')}</div>
         <div className="flex items-center gap-2">
           <Input value={npub} />
           <CopyIcon text={npub} />
@@ -61,7 +61,7 @@ export default function Account() {
       </div>
       <div className="space-y-1 mt-2">
         <div className="flex gap-2 items-center">
-          <div className="font-bold">Private key</div>
+          <div className="font-bold">{chrome.i18n.getMessage('private_key')}</div>
           <EyeIcon show={showNsec} setShow={setShowNsec} size={16} />
         </div>
         <div className="flex items-center gap-2">

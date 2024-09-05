@@ -20,20 +20,22 @@ export default function GenerateRandomAccount({
     <AlertDialog>
       <AlertDialogTrigger className="flex w-full">
         <Button className="w-full" variant="destructive">
-          Generate Random Account
+          {chrome.i18n.getMessage('generate_random_account')}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogTitle>
+            {chrome.i18n.getMessage('generate_random_account_dialog_title')}
+          </AlertDialogTitle>
           <AlertDialogDescription>
-            You will lose your current private key if you are not save it.
+            {chrome.i18n.getMessage('generate_random_account_dialog_description')}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>{chrome.i18n.getMessage('cancel')}</AlertDialogCancel>
           <AlertDialogAction variant="destructive" onClick={handleGenerateRandomAccount}>
-            Continue
+            {chrome.i18n.getMessage('continue')}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

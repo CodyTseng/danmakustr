@@ -4,8 +4,8 @@ import { Outlet } from 'react-router-dom'
 import { Nav } from '@/components/Nav'
 
 const navItems = [
-  { name: 'Relays', icon: <Server size={16} />, href: '/' },
-  { name: 'Account', icon: <UserRound size={16} />, href: '/account' },
+  { name: chrome.i18n.getMessage('relays'), icon: <Server size={16} />, href: '/' },
+  { name: chrome.i18n.getMessage('account'), icon: <UserRound size={16} />, href: '/account' },
 ]
 
 export default function Options() {
