@@ -1,7 +1,8 @@
 import '../index.css'
 
-import Account from '@/pages/Account/index'
-import Relays from '@/pages/Relays/index'
+import Account from '@/pages/Account'
+import History from '@/pages/History'
+import Relays from '@/pages/Relays'
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { RouterProvider, createHashRouter } from 'react-router-dom'
@@ -12,7 +13,8 @@ const router = createHashRouter([
     path: '/',
     element: <Options />,
     children: [
-      { index: true, element: <Relays /> },
+      { index: true, element: <History /> },
+      { path: '/relays', element: <Relays /> },
       { path: '/account', element: <Account /> },
     ],
   },
