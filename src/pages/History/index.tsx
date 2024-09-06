@@ -1,5 +1,6 @@
 import { keyBy, minBy, uniq, uniqBy } from 'lodash'
 import { useCallback, useRef, useState } from 'react'
+import Layout from '../Layout'
 import CommentItem from './components/CommentItem'
 
 export type Comment = {
@@ -90,17 +91,16 @@ export default function History() {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="text-3xl font-medium text-primary">{chrome.i18n.getMessage('history')}</div>
+    <Layout title={chrome.i18n.getMessage('history')}>
       <div className="space-y-2">
         {comments.map((comment) => (
           <CommentItem key={comment.id} comment={comment} />
         ))}
       </div>
-      <div ref={observer} className="text-muted-foreground text-center pb-2">
+      <div ref={observer} className="text-muted-foreground text-center pb-2 pt-4">
         {hasMore ? chrome.i18n.getMessage('loading') : chrome.i18n.getMessage('no_more_danmaku')}
       </div>
-    </div>
+    </Layout>
   )
 }
 

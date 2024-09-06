@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Trash2 } from 'lucide-react'
 import { ChangeEvent, useEffect, useState } from 'react'
+import Layout from '../Layout'
 
 type TRelay = { url: string; connected: boolean }
 
@@ -64,14 +65,13 @@ export default function Relays() {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="text-3xl font-medium text-primary">{chrome.i18n.getMessage('relays')}</div>
+    <Layout title={chrome.i18n.getMessage('relays')}>
       <div className="space-y-2">
         {relays.map((relay) => (
           <Relay key={relay.url} relay={relay} remove={removeRelay} />
         ))}
       </div>
-      <div>
+      <div className="pt-4">
         <div className="flex gap-3 items-center">
           <Input
             value={newRelayUrlInput}
@@ -86,7 +86,7 @@ export default function Relays() {
           <div className="text-destructive pl-3">{newRelayUrlInputError}</div>
         )}
       </div>
-    </div>
+    </Layout>
   )
 }
 

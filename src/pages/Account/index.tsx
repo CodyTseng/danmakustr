@@ -3,6 +3,7 @@ import { Separator } from '@/components/ui/separator'
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils'
 import { generateSecretKey, getPublicKey, nip19 } from 'nostr-tools'
 import { useEffect, useState } from 'react'
+import Layout from '../Layout'
 import CopyIcon from './components/CopyIcon'
 import EyeIcon from './components/EyeIcon'
 import GenerateRandomAccount from './components/GenerateRandomAccount'
@@ -50,9 +51,8 @@ export default function Account() {
   }
 
   return (
-    <div>
-      <div className="text-3xl font-medium text-primary">{chrome.i18n.getMessage('account')}</div>
-      <div className="space-y-1 mt-4">
+    <Layout title={chrome.i18n.getMessage('account')}>
+      <div className="space-y-1">
         <div className="font-bold">{chrome.i18n.getMessage('public_key')}</div>
         <div className="flex items-center gap-2">
           <Input value={npub} />
@@ -74,6 +74,6 @@ export default function Account() {
         <LoginWithNsec handleLoginWithNsec={handleLoginWithNsec} />
         <GenerateRandomAccount handleGenerateRandomAccount={handleGenerateRandomAccount} />
       </div>
-    </div>
+    </Layout>
   )
 }

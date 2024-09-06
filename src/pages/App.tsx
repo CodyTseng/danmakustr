@@ -14,14 +14,14 @@ export default function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <div className="h-screen bg-background text-foreground md:flex md:flex-col md:items-center text-base">
-        <div className="flex h-full max-md:flex-col md:w-1/3">
+        <div className="flex h-screen max-md:flex-col md:w-1/3">
           <Nav navItems={navItems} variant="options" className="max-md:hidden pt-4" />
-          <ScrollArea className="h-full flex-1 md:pl-20">
-            <div className="px-6 py-4">
-              <Outlet />
-            </div>
-          </ScrollArea>
-          <Nav navItems={navItems} variant="popup" className="md:hidden" />
+          <Outlet />
+          <Nav
+            navItems={navItems}
+            variant="popup"
+            className="md:hidden fixed bottom-0 left-0 right-0 bg-background"
+          />
         </div>
       </div>
     </ThemeProvider>
