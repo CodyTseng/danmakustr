@@ -6,12 +6,12 @@ import Relays from '@/pages/Relays'
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { RouterProvider, createHashRouter } from 'react-router-dom'
-import Popup from './Popup'
+import App from './App'
 
 const router = createHashRouter([
   {
     path: '/',
-    element: <Popup />,
+    element: <App />,
     children: [
       { index: true, element: <History /> },
       { path: '/relays', element: <Relays /> },

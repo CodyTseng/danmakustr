@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils'
 import { NavLink } from 'react-router-dom'
 
 type TNavItem = {
@@ -6,12 +7,21 @@ type TNavItem = {
   href: string
 }
 
-export function Nav({ navItems, variant }: { navItems: TNavItem[]; variant: 'popup' | 'options' }) {
+export function Nav({
+  navItems,
+  variant,
+  className,
+}: {
+  navItems: TNavItem[]
+  variant: 'popup' | 'options'
+  className?: string
+}) {
   return (
     <nav
-      className={
-        variant === 'popup' ? 'flex items-center justify-center w-full' : 'flex-shrink-0 space-y-2'
-      }
+      className={cn(
+        variant === 'popup' ? 'flex items-center justify-center w-full' : 'flex-shrink-0 space-y-2',
+        className,
+      )}
     >
       {navItems.map((navItem) =>
         variant === 'popup' ? (
@@ -35,7 +45,7 @@ function PopupNavItem({ navItem }: { navItem: TNavItem }) {
       }
     >
       {icon}
-      <div>{name}</div>
+      <div className="text-xs">{name}</div>
     </NavLink>
   )
 }
@@ -46,12 +56,12 @@ function OptionsNavItem({ navItem }: { navItem: TNavItem }) {
     <NavLink
       to={href}
       className={({ isActive }) =>
-        (isActive ? 'text-primary' : 'text-muted-foreground  hover:text-primary/60') +
+        (isActive ? 'text-primary' : 'text-muted-foreground  hover:text-primary/90') +
         ' flex items-center flex-1 gap-2'
       }
     >
       {icon}
-      <div>{name}</div>
+      <div className="text-lg">{name}</div>
     </NavLink>
   )
 }

@@ -10,16 +10,19 @@ const navItems = [
   { name: chrome.i18n.getMessage('account'), icon: <UserRound />, href: '/account' },
 ]
 
-export default function Popup() {
+export default function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-      <div className="flex flex-col items-center w-[350px] h-[500px] bg-background text-foreground">
-        <ScrollArea className="flex-1 w-[350px] text-base">
-          <div className="py-4 px-6 w-[350px]">
-            <Outlet />
-          </div>
-        </ScrollArea>
-        <Nav navItems={navItems} variant="popup" />
+      <div className="h-screen bg-background text-foreground md:flex md:flex-col md:items-center text-base">
+        <div className="flex h-screen max-md:flex-col md:w-1/3">
+          <Nav navItems={navItems} variant="options" className="max-md:hidden pt-4" />
+          <Outlet />
+          <Nav
+            navItems={navItems}
+            variant="popup"
+            className="md:hidden fixed bottom-0 left-0 right-0 bg-background"
+          />
+        </div>
       </div>
     </ThemeProvider>
   )
