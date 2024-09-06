@@ -51,9 +51,9 @@ There are many [other relay implementations](https://github.com/aljazceru/awesom
 
 - [x] editable relay list
 - [x] support custom danmaku color and display mode
-- [ ] support NIP-07
+- [x] support login with private key
+- [x] support viewing danmaku history
 - [ ] support reaction to danmaku
-- [ ] support viewing danmaku history
 - [ ] support downloading danmaku
 - [ ] support more platforms
 - [ ] ...

@@ -5,6 +5,9 @@
   "extension_description": {
     "message": "一款去中心化的弹幕插件，支持 YouTube。您的弹幕被发送并存储在您指定的服务器上，而非依赖某个中心化服务器。"
   },
+  "history": {
+    "message": "历史"
+  },
   "relays": {
     "message": "弹夹"
   },
@@ -74,5 +77,11 @@
   },
   "continue": {
     "message": "继续"
+  },
+  "loading": {
+    "message": "加载中..."
+  },
+  "no_more_danmaku": {
+    "message": "没有更多弹幕了"
   }
 }

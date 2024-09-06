@@ -5,6 +5,9 @@
   "extension_description": {
     "message": "A decentralized floating comment extension for YouTube. Comments are stored on servers you specify, not on a central server."
   },
+  "history": {
+    "message": "History"
+  },
   "relays": {
     "message": "Relays"
   },
@@ -74,5 +77,11 @@
   },
   "generate_random_account_dialog_description": {
     "message": "If you generate a new account, it will overwrite the current account. If you haven't backed up the private key of the current account, you will permanently lose access to it. Are you sure you want to continue?"
+  },
+  "loading": {
+    "message": "Loading..."
+  },
+  "no_more_danmaku": {
+    "message": "No more danmaku"
   }
 }
