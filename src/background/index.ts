@@ -152,7 +152,7 @@ async function processMessage(message: Msg, sender: chrome.runtime.MessageSender
         connected: relay.connected,
       })
     })
-    return relays
+    return relays.filter((relay) => relayUrls.includes(relay.url))
   } else if (message.type === 'FETCH_HISTORY_COMMENTS') {
     const { until = Math.floor(Date.now() / 1000), limit = 20 } = message
     const events = await ndk.fetchEvents({
