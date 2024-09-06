@@ -5,6 +5,9 @@
   "extension_description": {
     "message": "一款去中心化的彈幕插件，支援 YouTube。您的彈幕會被發送並儲存在您指定的伺服器上，而非依賴某個中心化伺服器"
   },
+  "history": {
+    "message": "歷史"
+  },
   "relays": {
     "message": "彈匣"
   },
@@ -74,5 +77,11 @@
   },
   "generate_random_account_dialog_description": {
     "message": "如果您生成新帳戶，它將覆蓋目前的帳戶。如果您尚未備份目前帳戶的私鑰，您將永久失去對該帳戶的存取權限。您確定要繼續嗎？"
+  },
+  "loading": {
+    "message": "載入中..."
+  },
+  "no_more_danmaku": {
+    "message": "沒有更多彈幕了"
   }
 }

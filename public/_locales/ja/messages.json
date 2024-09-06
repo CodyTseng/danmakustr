@@ -5,6 +5,9 @@
   "extension_description": {
     "message": "YouTubeに対応した分散型弾幕コメント拡張機能です。あなたのコメントは、中央集権型サーバーではなく、指定したサーバーに送信・保存されます"
   },
+  "history": {
+    "message": "履歴"
+  },
   "relays": {
     "message": "リレー"
   },
@@ -74,5 +77,11 @@
   },
   "generate_random_account_dialog_description": {
     "message": "新しいアカウントを生成すると、現在のアカウントが上書きされます。現在のアカウントの秘密鍵をバックアップしていない場合、そのアカウントへのアクセスが永久に失われます。続行しますか？"
+  },
+  "loading": {
+    "message": "読み込み中"
+  },
+  "no_more_danmaku": {
+    "message": "弾幕はもうありません"
   }
 }

@@ -5,7 +5,7 @@ import { History, Server, UserRound } from 'lucide-react'
 import { Outlet } from 'react-router-dom'
 
 const navItems = [
-  { name: 'History', icon: <History />, href: '/' },
+  { name: chrome.i18n.getMessage('history'), icon: <History />, href: '/' },
   { name: chrome.i18n.getMessage('relays'), icon: <Server />, href: '/relays' },
   { name: chrome.i18n.getMessage('account'), icon: <UserRound />, href: '/account' },
 ]

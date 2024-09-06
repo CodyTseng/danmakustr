@@ -91,12 +91,14 @@ export default function History() {
 
   return (
     <div className="space-y-4">
-      <div className="text-3xl font-medium text-primary">History</div>
-      {comments.map((comment) => (
-        <CommentItem key={comment.id} comment={comment} />
-      ))}
+      <div className="text-3xl font-medium text-primary">{chrome.i18n.getMessage('history')}</div>
+      <div className="space-y-2">
+        {comments.map((comment) => (
+          <CommentItem key={comment.id} comment={comment} />
+        ))}
+      </div>
       <div ref={observer} className="text-muted-foreground text-center pb-2">
-        {hasMore ? 'Loading...' : 'No more comments'}
+        {hasMore ? chrome.i18n.getMessage('loading') : chrome.i18n.getMessage('no_more_danmaku')}
       </div>
     </div>
   )
