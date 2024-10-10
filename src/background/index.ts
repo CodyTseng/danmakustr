@@ -175,6 +175,7 @@ async function processMessage(message: Msg, sender: chrome.runtime.MessageSender
         }
       })
       .filter(Boolean)
+      .sort((a, b) => (b?.createdAt ?? 0) - (a?.createdAt ?? 0))
   }
 }
 

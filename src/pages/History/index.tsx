@@ -74,7 +74,7 @@ export default function History() {
       until,
     })) as Omit<Comment, 'thumbnailUrl'>[]
     if (comments.length) {
-      const newUntil = minBy(comments, (comment) => comment.createdAt)!.createdAt - 1
+      const newUntil = comments[comments.length - 1].createdAt - 1
       setComments((oldComments) => uniqBy([...oldComments, ...comments], (comment) => comment.id))
       setHasMore(!!comments.length)
       setUntil((prev) => Math.min(prev, newUntil))
