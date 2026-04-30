@@ -3,7 +3,7 @@ import './index.css'
 import { BottomDanmakuIcon, ScrollDanmakuIcon, TopDanmakuIcon } from '@/components/icon'
 import * as Popover from '@radix-ui/react-popover'
 import { Palette, Pipette } from 'lucide-react'
-import { ChangeEvent, CSSProperties, ReactElement } from 'react'
+import { ChangeEvent, CSSProperties, ReactElement, useEffect, useState } from 'react'
 import { TMode } from '../../../types'
 
 const recommendedColors = [
@@ -41,6 +41,17 @@ const modes: { name: string; mode: TMode; icon: ReactElement }[] = [
   },
 ]
 
+function useFullscreenContainer() {
+  const [container, setContainer] = useState<HTMLElement | null>(null)
+  useEffect(() => {
+    const update = () => setContainer((document.fullscreenElement as HTMLElement | null) ?? null)
+    update()
+    document.addEventListener('fullscreenchange', update)
+    return () => document.removeEventListener('fullscreenchange', update)
+  }, [])
+  return container
+}
+
 export default function StyleEditorTrigger({
   mode,
   color,
@@ -52,12 +63,13 @@ export default function StyleEditorTrigger({
   onModeChange: (mode: TMode) => void
   onColorChange: (color: string) => void
 }) {
+  const fullscreenContainer = useFullscreenContainer()
   return (
     <Popover.Root>
       <Popover.Trigger className="style-editor-trigger" aria-label="Danmaku style">
         <Palette size={18} strokeWidth={2} />
       </Popover.Trigger>
-      <Popover.Portal>
+      <Popover.Portal container={fullscreenContainer ?? undefined}>
         <Popover.Content sideOffset={10} collisionPadding={10} style={{ zIndex: 9999 }}>
           <StyleEditor
             mode={mode}

@@ -32,6 +32,128 @@ body.dark-mode #danmaku-controls {
   --dm-border-strong: rgba(255, 255, 255, 0.7);
 }
 
+/* Floating mini overlay used while the player is fullscreen. Sits above
+   the progress bar on the left at the same vertical level as YouTube's
+   top-right action chips, and follows the chrome's auto-hide cycle. */
+.danmaku-mini {
+  position: absolute;
+  bottom: 90px;
+  left: 12px;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Roboto', 'Arial', sans-serif;
+  font-size: 14px;
+  color: #fff;
+  transition: opacity 0.2s ease;
+}
+
+#movie_player.ytp-autohide .danmaku-mini:not(.expanded) {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.danmaku-mini-actions {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding: 6px;
+  gap: 6px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
+}
+
+.danmaku-mini-actions button {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.1s ease, opacity 0.1s ease;
+}
+
+.danmaku-mini-actions button:not([disabled]):hover {
+  background-color: rgba(255, 255, 255, 0.14);
+}
+
+.danmaku-mini-actions button[disabled] {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.danmaku-mini-compose {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
+  padding: 6px;
+  height: 40px;
+  width: 360px;
+  max-width: calc(100vw - 200px);
+  gap: 6px;
+}
+
+.danmaku-mini-compose .style-editor-trigger {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.danmaku-mini-compose .style-editor-trigger:hover {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.18);
+}
+
+.danmaku-mini-input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: inherit;
+  font: inherit;
+  padding: 0 4px;
+}
+
+.danmaku-mini-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.danmaku-mini-send {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background-color: #fff;
+  color: #0f0f0f;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+}
+
+.danmaku-mini-send:hover {
+  background-color: rgba(255, 255, 255, 0.85);
+}
+
+.danmaku-mini-send[disabled] {
+  background-color: rgba(255, 255, 255, 0.4);
+  color: rgba(15, 15, 15, 0.6);
+  cursor: not-allowed;
+}
+
 .danmaku-button-secondary {
   flex-shrink: 0;
   width: 36px;
