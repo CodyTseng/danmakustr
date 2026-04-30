@@ -42,20 +42,35 @@ export class YoutubeStrategy implements PlatformStrategy {
       return
     }
 
-    const aboveTheFold = document.getElementById('above-the-fold')
-    if (!aboveTheFold) {
-      return console.error('Failed to find above the fold')
+    const mount = (aboveTheFold: HTMLElement) => {
+      const danmakuControl = document.createElement('div')
+      danmakuControl.id = 'danmaku-controls'
+      aboveTheFold.insertBefore(danmakuControl, aboveTheFold.firstChild)
+
+      ReactDOM.createRoot(danmakuControl).render(
+        <StrictMode>
+          <DanmakuControl danmakuEngine={danmakuEngine} />
+        </StrictMode>,
+      )
     }
 
-    const danmakuControl = document.createElement('div')
-    danmakuControl.id = 'danmaku-controls'
-    aboveTheFold.insertBefore(danmakuControl, aboveTheFold.firstChild)
+    const existing = document.getElementById('above-the-fold')
+    if (existing) return mount(existing)
 
-    ReactDOM.createRoot(document.getElementById('danmaku-controls') as HTMLElement).render(
-      <StrictMode>
-        <DanmakuControl danmakuEngine={danmakuEngine} />
-      </StrictMode>,
-    )
+    // YouTube can render the player before the metadata block; wait for it
+    const observer = new MutationObserver(() => {
+      const el = document.getElementById('above-the-fold')
+      if (el) {
+        observer.disconnect()
+        clearTimeout(timer)
+        mount(el)
+      }
+    })
+    observer.observe(document.documentElement, { childList: true, subtree: true })
+    const timer = setTimeout(() => {
+      observer.disconnect()
+      console.error('Failed to find above the fold')
+    }, 15000)
   }
 
   private removeDanmakuControl() {
