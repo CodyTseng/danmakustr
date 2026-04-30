@@ -55,7 +55,7 @@ export default function StyleEditorTrigger({
   return (
     <HoverCard.Root>
       <HoverCard.Trigger className="style-editor-trigger">
-        <Palette size={18} strokeWidth={3} />
+        <Palette size={18} strokeWidth={2} />
       </HoverCard.Trigger>
       <HoverCard.Portal>
         <HoverCard.Content sideOffset={10} collisionPadding={10} style={{ zIndex: 9999 }}>

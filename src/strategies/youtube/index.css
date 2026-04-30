@@ -1,118 +1,131 @@
 #danmaku-controls {
-  flex: 1;
+  --dm-text: #0f0f0f;
+  --dm-text-secondary: #606060;
+  --dm-bg-chip: #f2f2f2;
+  --dm-bg-chip-hover: #e5e5e5;
+  --dm-bg-primary: #0f0f0f;
+  --dm-bg-primary-hover: #272727;
+  --dm-text-on-primary: #fff;
+  --dm-border: rgba(0, 0, 0, 0.1);
+  --dm-border-strong: rgba(0, 0, 0, 0.6);
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
   width: 100%;
-  display: flex;
-  align-items: center;
-  flex: 1;
-  width: 100%;
-  gap: 1rem;
-  display: flex;
-  align-items: center;
-  padding-bottom: 1rem;
+  padding: 12px 0;
+  font-family: 'Roboto', 'Arial', sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--dm-text);
 }
 
-.danmaku-button-primary {
-  background-color: rgba(0, 0, 0, 0.95);
-  color: white;
-  border-radius: 18px;
-  border: none;
-  padding: 0 1.5rem;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  height: 32px;
-  font-weight: bold;
-}
-
-.danmaku-button-primary:hover {
-  background-color: rgba(0, 0, 0, 0.85);
-}
-
-.danmaku-button-primary[disabled] {
-  background-color: rgba(0, 0, 0, 0.5);
-  cursor: not-allowed;
-}
-
-body.dark-mode .danmaku-button-primary {
-  background-color: rgba(255, 255, 255, 0.95);
-  color: black;
-}
-
-body.dark-mode .danmaku-button-primary:hover {
-  background-color: rgba(255, 255, 255, 0.85);
-}
-
-body.dark-mode .danmaku-button-primary[disabled] {
-  background-color: rgba(255, 255, 255, 0.5);
+body.dark-mode #danmaku-controls {
+  --dm-text: #f1f1f1;
+  --dm-text-secondary: #aaa;
+  --dm-bg-chip: rgba(255, 255, 255, 0.1);
+  --dm-bg-chip-hover: rgba(255, 255, 255, 0.2);
+  --dm-bg-primary: #f1f1f1;
+  --dm-bg-primary-hover: #d9d9d9;
+  --dm-text-on-primary: #0f0f0f;
+  --dm-border: rgba(255, 255, 255, 0.2);
+  --dm-border-strong: rgba(255, 255, 255, 0.7);
 }
 
 .danmaku-button-secondary {
-  background-color: rgba(0, 0, 0, 0.05);
-  border-radius: 18px;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
   border: none;
-  padding: 0 1.5rem;
-  display: flex;
+  border-radius: 18px;
+  background-color: var(--dm-bg-chip);
+  color: var(--dm-text);
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
   cursor: pointer;
-  height: 32px;
-  font-weight: bold;
+  transition: background-color 0.1s ease;
 }
 
 .danmaku-button-secondary:hover {
-  background-color: rgba(0, 0, 0, 0.1);
-}
-
-body.dark-mode .danmaku-button-secondary {
-  background-color: rgba(255, 255, 255, 0.2);
-  color: white;
-}
-
-body.dark-mode .danmaku-button-secondary:hover {
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: var(--dm-bg-chip-hover);
 }
 
 .danmaku-input-wrapper {
+  flex: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
-  flex: 1;
-  width: 100%;
-  border-bottom: 1.5px solid rgba(0, 0, 0, 0.4);
-  gap: 0.5rem;
+  gap: 4px;
+  height: 36px;
+  padding: 0 4px;
+  position: relative;
+  border-bottom: 1px solid var(--dm-border);
 }
 
-.danmaku-input-wrapper:focus-within {
-  border-bottom: 1.5px solid rgba(0, 0, 0, 0.8);
+.danmaku-input-wrapper::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 2px;
+  background-color: var(--dm-text);
+  transform: scaleX(0);
+  transition: transform 0.25s ease;
+}
+
+.danmaku-input-wrapper:focus-within::after {
+  transform: scaleX(1);
 }
 
 .danmaku-input-wrapper[disabled] {
-  border-bottom: 1.5px solid transparent;
+  border-bottom-color: transparent;
 }
 
-body.dark-mode .danmaku-input-wrapper {
-  border-bottom: 1.5px solid rgba(255, 255, 255, 0.4);
-}
-
-body.dark-mode .danmaku-input-wrapper:focus-within {
-  border-bottom: 1.5px solid rgba(255, 255, 255, 0.9);
-}
-
-body.dark-mode .danmaku-input-wrapper[disabled] {
-  border-bottom: 1.5px solid transparent;
+.danmaku-input-wrapper[disabled]::after {
+  transform: scaleX(0);
 }
 
 .danmaku-input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
   background-color: transparent;
   border: none;
   outline: none;
-  flex: 1;
-  height: 32px;
+  font: inherit;
+  color: inherit;
 }
 
-body.dark-mode .danmaku-input {
-  color: white;
+.danmaku-input::placeholder {
+  color: var(--dm-text-secondary);
 }
 
 .danmaku-input[disabled] {
-  background-color: transparent;
+  cursor: not-allowed;
+}
+
+.danmaku-button-primary {
+  flex-shrink: 0;
+  height: 36px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 18px;
+  background-color: var(--dm-bg-primary);
+  color: var(--dm-text-on-primary);
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+}
+
+.danmaku-button-primary:hover {
+  background-color: var(--dm-bg-primary-hover);
+}
+
+.danmaku-button-primary[disabled] {
+  background-color: var(--dm-bg-chip);
+  color: var(--dm-text-secondary);
   cursor: not-allowed;
 }

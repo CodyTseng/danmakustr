@@ -182,9 +182,9 @@ function DanmakuControl({ danmakuEngine }: { danmakuEngine: DanmakuEngine }) {
         }
       >
         {switchValue ? (
-          <MessageSquareText size={16} strokeWidth={3} />
+          <MessageSquareText size={20} strokeWidth={2} />
         ) : (
-          <MessageSquareOff size={16} strokeWidth={3} />
+          <MessageSquareOff size={20} strokeWidth={2} />
         )}
       </button>
       <div className="danmaku-input-wrapper">
