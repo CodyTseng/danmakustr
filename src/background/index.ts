@@ -32,10 +32,9 @@ let relayUrls: string[] = [
 ]
 
 async function main() {
-  let { privateKey, relayUrls: localRelayUrls } = await chrome.storage.local.get([
-    'privateKey',
-    'relayUrls',
-  ])
+  const stored = await chrome.storage.local.get(['privateKey', 'relayUrls'])
+  const privateKey = stored.privateKey as string | undefined
+  const localRelayUrls = stored.relayUrls as string[] | undefined
   if (!localRelayUrls) {
     await chrome.storage.local.set({
       relayUrls,
@@ -192,21 +191,23 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
 
 chrome.storage.onChanged.addListener(async (changes) => {
   if (changes.relayUrls && ndk) {
-    const { newValue = [], oldValue = [] } = changes.relayUrls
+    const newValue = (changes.relayUrls.newValue as string[] | undefined) ?? []
+    const oldValue = (changes.relayUrls.oldValue as string[] | undefined) ?? []
     relayUrls = newValue
-    const added = newValue.filter((url: string) => !oldValue.includes(url))
-    const removed = oldValue.filter((url: string) => !newValue.includes(url))
-    added.forEach((url: string) => {
-      ndk!.pool.addRelay(new NDKRelay(url), true)
+    const added = newValue.filter((url) => !oldValue.includes(url))
+    const removed = oldValue.filter((url) => !newValue.includes(url))
+    added.forEach((url) => {
+      ndk!.pool.addRelay(new NDKRelay(url, undefined, ndk!), true)
       console.debug('Added relay:', url)
     })
-    removed.forEach((url: string) => {
+    removed.forEach((url) => {
       ndk!.pool.removeRelay(normalizeUrl(url))
       console.debug('Removed relay:', url)
     })
   }
   if (changes.privateKey) {
-    const { newValue: newPrivateKey, oldValue: oldPrivateKey } = changes.privateKey
+    const newPrivateKey = changes.privateKey.newValue as string | undefined
+    const oldPrivateKey = changes.privateKey.oldValue as string | undefined
     if (!newPrivateKey || !oldPrivateKey || newPrivateKey === oldPrivateKey) return
     await initializeNDK(relayUrls, newPrivateKey)
   }

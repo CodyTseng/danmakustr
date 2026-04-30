@@ -71,7 +71,7 @@ export class YoutubeStrategy implements PlatformStrategy {
   }
 }
 
-function DanmakuControl({ danmakuEngine }: { danmakuEngine: DanmakuEngine }): JSX.Element {
+function DanmakuControl({ danmakuEngine }: { danmakuEngine: DanmakuEngine }) {
   const [switchValue, setSwitchValue] = useState(true)
   const [inputValue, setInputValue] = useState('')
   const [mode, setMode] = useState<TMode>('rtl')
@@ -80,10 +80,10 @@ function DanmakuControl({ danmakuEngine }: { danmakuEngine: DanmakuEngine }): JS
   const init = async () => {
     const { mode, color } = await chrome.storage.local.get(['mode', 'color'])
     if (mode) {
-      setMode(mode)
+      setMode(mode as TMode)
     }
     if (color) {
-      setColor(color)
+      setColor(color as string)
     }
   }
 

@@ -1,9 +1,10 @@
 import { cn } from '@/lib/utils'
+import type { ReactElement } from 'react'
 import { NavLink } from 'react-router-dom'
 
 type TNavItem = {
   name: string
-  icon: JSX.Element
+  icon: ReactElement
   href: string
 }
 

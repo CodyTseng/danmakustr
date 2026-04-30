@@ -17,7 +17,7 @@ export default function Account() {
 
   const init = async () => {
     const { privateKey } = await chrome.storage.local.get('privateKey')
-    setPrivateKey(privateKey)
+    setPrivateKey((privateKey as string | undefined) ?? null)
   }
   useEffect(() => {
     init()
