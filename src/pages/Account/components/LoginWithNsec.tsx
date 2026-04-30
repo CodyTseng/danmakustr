@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
-import { bytesToHex } from '@noble/hashes/utils'
+import { bytesToHex } from 'nostr-tools/utils'
 import { nip19 } from 'nostr-tools'
 import { useState } from 'react'
 import EyeIcon from './EyeIcon'

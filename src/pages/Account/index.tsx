@@ -1,6 +1,6 @@
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
-import { bytesToHex, hexToBytes } from '@noble/hashes/utils'
+import { bytesToHex, hexToBytes } from 'nostr-tools/utils'
 import { generateSecretKey, getPublicKey, nip19 } from 'nostr-tools'
 import { useEffect, useState } from 'react'
 import Layout from '../Layout'

@@ -63,7 +63,11 @@ async function init() {
   }
   currentVideoId = id
   strategy.addDanmakuControl(danmakuEngine)
-  chrome.runtime.sendMessage({ type: 'INIT_COMMENTS', id: danmakuEngine.id })
+  chrome.runtime.sendMessage({ type: 'INIT_COMMENTS', id: danmakuEngine.id }, () => {
+    if (chrome.runtime.lastError) {
+      console.error('Danmaku: SW error', chrome.runtime.lastError.message)
+    }
+  })
 }
 
 init()

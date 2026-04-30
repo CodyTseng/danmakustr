@@ -1,7 +1,14 @@
 import { TMode } from '@/types'
-import { bytesToHex, hexToBytes } from '@noble/hashes/utils'
-import NDK, { NDKEvent, NDKPrivateKeySigner, NDKRelay } from '@nostr-dev-kit/ndk'
-import { generateSecretKey, getPublicKey } from 'nostr-tools'
+import {
+  Event,
+  finalizeEvent,
+  generateSecretKey,
+  getPublicKey,
+  SimplePool,
+} from 'nostr-tools'
+import { bytesToHex, hexToBytes } from 'nostr-tools/utils'
+
+const KIND_DANMAKU = 2333 as number
 
 type SendCommentMsg = {
   type: 'SEND_COMMENT'
@@ -16,12 +23,10 @@ type GetRelaysMsg = { type: 'GET_RELAYS' }
 type FetchHistoryComments = { type: 'FETCH_HISTORY_COMMENTS'; until?: number; limit?: number }
 type Msg = SendCommentMsg | InitMsg | GetRelaysMsg | FetchHistoryComments
 
-let queue: {
-  message: Msg
-  sender: chrome.runtime.MessageSender
-}[] = []
-let ndk: NDK | null = null
+const pool = new SimplePool()
+let privateKey: Uint8Array | null = null
 let pubkey: string | null = null
+
 let relayUrls: string[] = [
   'wss://nostr-relay.app/',
   'wss://relay.damus.io/',
@@ -31,136 +36,98 @@ let relayUrls: string[] = [
   'wss://relay.snort.social/',
 ]
 
-async function main() {
+const ready = (async function init() {
   const stored = await chrome.storage.local.get(['privateKey', 'relayUrls'])
-  const privateKey = stored.privateKey as string | undefined
-  const localRelayUrls = stored.relayUrls as string[] | undefined
-  if (!localRelayUrls) {
-    await chrome.storage.local.set({
-      relayUrls,
-    })
+  let storedPk = stored.privateKey as string | undefined
+  const storedRelays = stored.relayUrls as string[] | undefined
+
+  if (!storedRelays) {
+    await chrome.storage.local.set({ relayUrls })
   } else {
-    relayUrls = localRelayUrls
+    relayUrls = storedRelays
   }
-
-  await initializeNDK(relayUrls, privateKey)
-
-  if (queue.length) {
-    console.debug('Processing queue...')
-    await Promise.allSettled(queue.map(({ message, sender }) => processMessage(message, sender)))
-    queue = []
+  if (!storedPk) {
+    storedPk = bytesToHex(generateSecretKey())
+    await chrome.storage.local.set({ privateKey: storedPk })
   }
-}
-main()
+  const pkBytes = hexToBytes(storedPk)
+  privateKey = pkBytes
+  pubkey = getPublicKey(pkBytes)
 
-function generatePrivateKey() {
-  let sk = generateSecretKey()
-  return bytesToHex(sk)
-}
-
-async function initializeNDK(relayUrls: string[], privateKey?: string) {
-  console.debug('Initializing NDK...')
-  if (!privateKey) {
-    privateKey = generatePrivateKey()
-    await chrome.storage.local.set({ privateKey })
-  }
-  const signer = new NDKPrivateKeySigner(privateKey)
-  pubkey = getPublicKey(hexToBytes(privateKey))
-  console.debug('Pubkey', pubkey)
-  ndk = new NDK({
-    explicitRelayUrls: relayUrls,
-    signer,
+  // Warm up the connections so GET_RELAYS reports a useful status promptly.
+  relayUrls.forEach((url) => {
+    pool.ensureRelay(url).catch((err) => console.debug('Relay connect failed', url, err))
   })
-  await ndk.connect(5000)
-  console.debug('NDK connected')
-}
+})()
 
 async function processMessage(message: Msg, sender: chrome.runtime.MessageSender) {
-  if (!ndk || !pubkey) {
-    // FIXME: not a good way
-    queue.push({ message, sender })
-    return
-  }
+  await ready
+  const sk = privateKey
+  const pk = pubkey
+  if (!sk || !pk) return
 
   if (message.type === 'SEND_COMMENT') {
     const { comment, time, id, mode, color } = message
-    console.debug('Emitting comment:', comment, time)
-
-    const tags = [
+    const tags: string[][] = [
       ['i', id],
       ['time', time.toString()],
     ]
-    if (mode) {
-      tags.push(['mode', mode])
-    }
-    if (color) {
-      tags.push(['color', color])
-    }
+    if (mode) tags.push(['mode', mode])
+    if (color) tags.push(['color', color])
+    const event = finalizeEvent(
+      {
+        kind: KIND_DANMAKU,
+        created_at: Math.ceil(Date.now() / 1000),
+        content: comment,
+        tags,
+      },
+      sk,
+    )
+    await Promise.allSettled(pool.publish(relayUrls, event))
+    return
+  }
 
-    const event = new NDKEvent(ndk, {
-      kind: 2333,
-      created_at: Math.ceil(Date.now() / 1000),
-      content: comment,
-      pubkey,
-      tags,
-    })
-    const result = await event.publish()
-    console.debug('Event published:', result)
-  } else if (message.type === 'INIT_COMMENTS') {
-    if (!sender.tab?.id) return
+  if (message.type === 'INIT_COMMENTS') {
+    const tabId = sender.tab?.id
+    if (!tabId) return { error: 'no tabId' }
     const { id } = message
-    console.debug('Init comments for:', id)
-
-    let until = Math.ceil(Date.now() / 1000)
-    let hasNext = false
-    let count = 0
-    do {
-      const events = await ndk.fetchEvents({
-        kinds: [2333 as any],
-        '#i': [id],
-        limit: 1000,
-        until,
-      })
-      count += events.size
-      console.debug(`Fetched ${events.size} events for ${id} until ${until}`)
-
-      events.forEach((event) => {
-        const comment = event.content
-        const { time, mode, color } = parseEventTags(event)
-        chrome.tabs.sendMessage(sender.tab!.id!, {
+    console.debug('Danmaku BG: INIT_COMMENTS', id, 'relays:', relayUrls)
+    const events = await pool.querySync(
+      relayUrls,
+      { kinds: [KIND_DANMAKU], '#i': [id], limit: 1000 } as any,
+      { maxWait: 8000 },
+    )
+    console.debug('Danmaku BG: fetched', events.length, 'events for', id)
+    for (const event of events) {
+      const { time, mode, color } = parseEventTags(event)
+      chrome.tabs
+        .sendMessage(tabId, {
           type: 'EMIT_INIT_COMMENT',
-          comment,
+          comment: event.content,
           mode,
           color,
           time,
-          self: event.pubkey === pubkey,
+          self: event.pubkey === pk,
           id,
         })
+        .catch(() => {})
+    }
+    return { count: events.length, relays: relayUrls }
+  }
 
-        if (event.created_at && event.created_at < until) {
-          until = event.created_at - 1
-        }
-      })
-      hasNext = events.size > 0
-    } while (hasNext || count > 10000)
-  } else if (message.type === 'GET_RELAYS') {
-    const relays: { url: string; connected: boolean }[] = []
-    ndk.pool.relays.forEach((relay) => {
-      relays.push({
-        url: relay.url,
-        connected: relay.connected,
-      })
-    })
-    return relays.filter((relay) => relayUrls.includes(relay.url))
-  } else if (message.type === 'FETCH_HISTORY_COMMENTS') {
+  if (message.type === 'GET_RELAYS') {
+    const status = pool.listConnectionStatus()
+    return relayUrls.map((url) => ({ url, connected: !!status.get(url) }))
+  }
+
+  if (message.type === 'FETCH_HISTORY_COMMENTS') {
     const { until = Math.floor(Date.now() / 1000), limit = 20 } = message
-    const events = await ndk.fetchEvents({
-      kinds: [2333 as any],
-      authors: [pubkey],
-      limit,
-      until,
-    })
-    return Array.from(events)
+    const events = await pool.querySync(
+      relayUrls,
+      { kinds: [KIND_DANMAKU], authors: [pk], until, limit } as any,
+      { maxWait: 8000 },
+    )
+    return events
       .map((event) => {
         const { time, videoId, platform } = parseEventTags(event)
         if (!videoId) return null
@@ -179,56 +146,54 @@ async function processMessage(message: Msg, sender: chrome.runtime.MessageSender
 }
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  processMessage(message, sender).then(sendResponse)
+  processMessage(message, sender)
+    .then(sendResponse)
+    .catch((err) => {
+      console.error('processMessage failed', err)
+      sendResponse(undefined)
+    })
   return true
 })
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
   if (changeInfo.url) {
-    chrome.tabs.sendMessage(tabId, { type: 'TAB_UPDATED' })
+    chrome.tabs.sendMessage(tabId, { type: 'TAB_UPDATED' }).catch(() => {})
   }
 })
 
 chrome.storage.onChanged.addListener(async (changes) => {
-  if (changes.relayUrls && ndk) {
+  if (changes.relayUrls) {
     const newValue = (changes.relayUrls.newValue as string[] | undefined) ?? []
     const oldValue = (changes.relayUrls.oldValue as string[] | undefined) ?? []
     relayUrls = newValue
-    const added = newValue.filter((url) => !oldValue.includes(url))
-    const removed = oldValue.filter((url) => !newValue.includes(url))
+    const removed = oldValue.filter((u) => !newValue.includes(u))
+    if (removed.length) pool.close(removed)
+    const added = newValue.filter((u) => !oldValue.includes(u))
     added.forEach((url) => {
-      ndk!.pool.addRelay(new NDKRelay(url, undefined, ndk!), true)
-      console.debug('Added relay:', url)
-    })
-    removed.forEach((url) => {
-      ndk!.pool.removeRelay(normalizeUrl(url))
-      console.debug('Removed relay:', url)
+      pool.ensureRelay(url).catch((err) => console.debug('Relay connect failed', url, err))
     })
   }
   if (changes.privateKey) {
-    const newPrivateKey = changes.privateKey.newValue as string | undefined
-    const oldPrivateKey = changes.privateKey.oldValue as string | undefined
-    if (!newPrivateKey || !oldPrivateKey || newPrivateKey === oldPrivateKey) return
-    await initializeNDK(relayUrls, newPrivateKey)
+    const newPk = changes.privateKey.newValue as string | undefined
+    const oldPk = changes.privateKey.oldValue as string | undefined
+    if (!newPk || !oldPk || newPk === oldPk) return
+    const pkBytes = hexToBytes(newPk)
+    privateKey = pkBytes
+    pubkey = getPublicKey(pkBytes)
   }
 })
 
-function normalizeUrl(url: string) {
-  return url.endsWith('/') ? url : url + '/'
-}
-
-function parseEventTags(event: NDKEvent) {
-  let time: number = 0
+function parseEventTags(event: Event) {
+  let time = 0
   let mode: TMode | undefined
   let color: string | undefined
   let videoId: string | undefined
   let platform: string | undefined
-  event.tags.forEach(([tagName, tagValue]) => {
+  event.tags.forEach((tag) => {
+    const [tagName, tagValue] = tag
     if (tagName === 'time' && tagValue) {
       const parsedTime = parseFloat(tagValue)
-      if (!isNaN(parsedTime)) {
-        time = parsedTime
-      }
+      if (!isNaN(parsedTime)) time = parsedTime
     } else if (tagName === 'mode' && ['rtl', 'top', 'bottom'].includes(tagValue)) {
       mode = tagValue as TMode
     } else if (tagName === 'color' && /^#[0-9a-fA-F]{6}$/.test(tagValue)) {

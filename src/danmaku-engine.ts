@@ -38,7 +38,24 @@ export class DanmakuEngine {
       comments: [],
       speed: 144,
     })
-    this.resizeObserver = new ResizeObserver(() => this.danmaku.resize())
+    // The danmaku lib appends its stage as the last child of the container
+    // with z-index:auto, which on YouTube gets buried under .html5-video-container
+    // (z=10) and the player chrome (up to z=2300). Force it on top, and shift
+    // it down so danmaku doesn't render against the very top edge of the video.
+    const stage = containerElement.lastElementChild as HTMLElement | null
+    const TOP_RESERVE = 12
+    const styleStage = (s: HTMLElement) => {
+      s.style.zIndex = '9999'
+      s.style.transform = `translateZ(0) translateY(${TOP_RESERVE}px)`
+    }
+    if (stage) styleStage(stage)
+    this.resizeObserver = new ResizeObserver(() => {
+      this.danmaku.resize()
+      // The lib resets stage width/height on resize but leaves transform alone;
+      // re-apply just in case the stage element gets recreated.
+      const s = containerElement.lastElementChild as HTMLElement | null
+      if (s) styleStage(s)
+    })
     this.resizeObserver.observe(containerElement)
     console.debug('Danmaku created')
   }
