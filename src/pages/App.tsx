@@ -1,6 +1,5 @@
 import { Nav } from '@/components/Nav'
 import { ThemeProvider } from '@/components/theme-provider'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { History, Server, UserRound } from 'lucide-react'
 import { Outlet } from 'react-router-dom'
 
@@ -15,12 +14,12 @@ export default function App() {
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <div className="h-screen bg-background text-foreground md:flex md:flex-col md:items-center text-base">
         <div className="flex h-screen max-md:flex-col md:w-1/3">
-          <Nav navItems={navItems} variant="options" className="max-md:hidden pt-4" />
+          <Nav navItems={navItems} variant="options" className="max-md:hidden pt-6 w-44" />
           <Outlet />
           <Nav
             navItems={navItems}
             variant="popup"
-            className="md:hidden fixed bottom-0 left-0 right-0 bg-background"
+            className="md:hidden fixed bottom-0 left-0 right-0 bg-background/85 backdrop-blur-md border-t border-border/60 z-20"
           />
         </div>
       </div>

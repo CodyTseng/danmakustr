@@ -1,4 +1,5 @@
-import { keyBy, minBy, uniq, uniqBy } from 'lodash'
+import { keyBy, uniq, uniqBy } from 'lodash'
+import { Inbox, Loader2 } from 'lucide-react'
 import { useCallback, useRef, useState } from 'react'
 import Layout from '../Layout'
 import CommentItem from './components/CommentItem'
@@ -90,17 +91,44 @@ export default function History() {
     setLoading(false)
   }
 
+  const isEmpty = !loading && !hasMore && comments.length === 0
+
   return (
     <Layout title={chrome.i18n.getMessage('history')}>
-      <div className="space-y-2">
-        {comments.map((comment) => (
-          <CommentItem key={comment.id} comment={comment} />
-        ))}
-      </div>
-      <div ref={observer} className="text-muted-foreground text-center pb-2 pt-4">
-        {hasMore ? chrome.i18n.getMessage('loading') : chrome.i18n.getMessage('no_more_danmaku')}
-      </div>
+      {isEmpty ? (
+        <EmptyState />
+      ) : (
+        <>
+          <div className="space-y-1">
+            {comments.map((comment) => (
+              <CommentItem key={comment.id} comment={comment} />
+            ))}
+          </div>
+          <div
+            ref={observer}
+            className="flex items-center justify-center gap-2 text-muted-foreground text-xs pb-2 pt-6"
+          >
+            {hasMore ? (
+              <>
+                <Loader2 size={14} className="animate-spin" />
+                <span>{chrome.i18n.getMessage('loading')}</span>
+              </>
+            ) : (
+              <span>{chrome.i18n.getMessage('no_more_danmaku')}</span>
+            )}
+          </div>
+        </>
+      )}
     </Layout>
+  )
+}
+
+function EmptyState() {
+  return (
+    <div className="flex flex-col items-center justify-center py-16 text-center text-muted-foreground">
+      <Inbox size={32} className="mb-3 opacity-60" />
+      <div className="text-sm">{chrome.i18n.getMessage('no_more_danmaku')}</div>
+    </div>
   )
 }
 

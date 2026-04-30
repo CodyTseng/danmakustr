@@ -1,42 +1,34 @@
 import { ScrollArea } from '@/components/ui/scroll-area'
-import React, { useEffect, useRef, useState } from 'react'
+import React from 'react'
 
-export default function Layout({ children, title }: { children: React.ReactNode; title: string }) {
-  const [isHeaderSmall, setIsHeaderSmall] = useState(false)
-  const scrollAreaRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (scrollAreaRef.current) {
-        const scrollTop = scrollAreaRef.current.scrollTop
-        setIsHeaderSmall(scrollTop > 50)
-      }
-    }
-
-    const scrollAreaElement = scrollAreaRef.current
-    scrollAreaElement?.addEventListener('scroll', handleScroll)
-
-    return () => {
-      scrollAreaElement?.removeEventListener('scroll', handleScroll)
-    }
-  }, [])
-
+export default function Layout({
+  children,
+  title,
+  action,
+}: {
+  children: React.ReactNode
+  title: string
+  action?: React.ReactNode
+}) {
   return (
-    <div className="flex flex-col h-screen w-full max-md:pb-14 md:pl-20">
-      <Header title={title} isSmall={isHeaderSmall} />
-      <ScrollArea ref={scrollAreaRef} className="flex-grow">
-        <div className="px-6">{children}</div>
+    <div className="flex flex-col h-screen w-full max-md:pb-16">
+      <Header title={title} action={action} />
+      <ScrollArea className="flex-grow">
+        <div className="px-5 md:px-6 pt-4 pb-6">{children}</div>
       </ScrollArea>
     </div>
   )
 }
 
-function Header({ title, isSmall }: { title: string; isSmall: boolean }) {
+function Header({ title, action }: { title: string; action?: React.ReactNode }) {
   return (
-    <div
-      className={`transition-all duration-300 px-6 ${isSmall ? 'text-xl py-2' : 'text-3xl py-4'} font-medium text-primary`}
-    >
-      {title}
+    <div className="bg-background border-b border-border/60">
+      <div className="flex items-center gap-3 px-5 md:px-6 py-4 md:py-5">
+        <div className="text-xl md:text-2xl font-semibold leading-tight tracking-tight truncate flex-1 min-w-0">
+          {title}
+        </div>
+        {action}
+      </div>
     </div>
   )
 }

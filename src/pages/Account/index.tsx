@@ -52,28 +52,58 @@ export default function Account() {
 
   return (
     <Layout title={chrome.i18n.getMessage('account')}>
-      <div className="space-y-1">
-        <div className="font-bold">{chrome.i18n.getMessage('public_key')}</div>
-        <div className="flex items-center gap-2">
-          <Input value={npub} />
-          <CopyIcon text={npub} />
-        </div>
+      <div className="space-y-4">
+        <KeyField label={chrome.i18n.getMessage('public_key')} value={npub} masked={false} />
+        <KeyField
+          label={chrome.i18n.getMessage('private_key')}
+          value={nsec}
+          masked
+          showMasked={showNsec}
+          onToggleMasked={setShowNsec}
+        />
       </div>
-      <div className="space-y-1 mt-2">
-        <div className="flex gap-2 items-center">
-          <div className="font-bold">{chrome.i18n.getMessage('private_key')}</div>
-          <EyeIcon show={showNsec} setShow={setShowNsec} size={16} />
-        </div>
-        <div className="flex items-center gap-2">
-          <Input type={showNsec ? 'text' : 'password'} value={nsec} />
-          <CopyIcon text={nsec} />
-        </div>
-      </div>
-      <Separator className="my-8" />
+      <Separator className="my-6" />
       <div className="space-y-2">
         <LoginWithNsec handleLoginWithNsec={handleLoginWithNsec} />
         <GenerateRandomAccount handleGenerateRandomAccount={handleGenerateRandomAccount} />
       </div>
     </Layout>
+  )
+}
+
+function KeyField({
+  label,
+  value,
+  masked,
+  showMasked,
+  onToggleMasked,
+}: {
+  label: string
+  value: string
+  masked: boolean
+  showMasked?: boolean
+  onToggleMasked?: (show: boolean) => void
+}) {
+  const isHidden = masked && !showMasked
+  return (
+    <div className="space-y-1.5">
+      <div className="flex items-center justify-between">
+        <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+          {label}
+        </label>
+        {masked && onToggleMasked && (
+          <EyeIcon show={!!showMasked} setShow={onToggleMasked} size={14} className="-mr-1" />
+        )}
+      </div>
+      <div className="relative">
+        <Input
+          type={isHidden ? 'password' : 'text'}
+          value={value}
+          readOnly
+          className="pr-10 font-mono text-xs bg-muted/40"
+        />
+        <CopyIcon text={value} className="absolute right-1.5 top-1/2 -translate-y-1/2" />
+      </div>
+    </div>
   )
 }

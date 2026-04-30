@@ -20,7 +20,9 @@ export function Nav({
   return (
     <nav
       className={cn(
-        variant === 'popup' ? 'flex items-center justify-center w-full' : 'flex-shrink-0 space-y-2',
+        variant === 'popup'
+          ? 'flex items-stretch justify-around w-full h-16'
+          : 'flex-shrink-0 space-y-1 px-3',
         className,
       )}
     >
@@ -41,12 +43,24 @@ function PopupNavItem({ navItem }: { navItem: TNavItem }) {
     <NavLink
       to={href}
       className={({ isActive }) =>
-        (isActive ? 'text-primary' : 'text-muted-foreground hover:text-primary/80') +
-        ' flex flex-col items-center flex-1 p-2'
+        cn(
+          'relative flex flex-col items-center justify-center gap-1 flex-1 transition-colors [&_svg]:size-5',
+          isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground',
+        )
       }
     >
-      {icon}
-      <div className="text-xs">{name}</div>
+      {({ isActive }) => (
+        <>
+          <span
+            className={cn(
+              'absolute top-0 left-1/2 -translate-x-1/2 h-0.5 w-8 rounded-b-full bg-primary transition-opacity',
+              isActive ? 'opacity-100' : 'opacity-0',
+            )}
+          />
+          {icon}
+          <div className="text-[11px] font-medium leading-none">{name}</div>
+        </>
+      )}
     </NavLink>
   )
 }
@@ -57,12 +71,16 @@ function OptionsNavItem({ navItem }: { navItem: TNavItem }) {
     <NavLink
       to={href}
       className={({ isActive }) =>
-        (isActive ? 'text-primary' : 'text-muted-foreground  hover:text-primary/90') +
-        ' flex items-center flex-1 gap-2'
+        cn(
+          'flex items-center gap-3 px-3 py-2 rounded-md transition-colors [&_svg]:size-5',
+          isActive
+            ? 'bg-primary/10 text-primary'
+            : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+        )
       }
     >
       {icon}
-      <div className="text-lg">{name}</div>
+      <div className="text-base font-medium">{name}</div>
     </NavLink>
   )
 }
