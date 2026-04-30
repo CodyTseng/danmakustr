@@ -1,9 +1,9 @@
 import './index.css'
 
 import { BottomDanmakuIcon, ScrollDanmakuIcon, TopDanmakuIcon } from '@/components/icon'
-import * as HoverCard from '@radix-ui/react-hover-card'
-import { Palette } from 'lucide-react'
-import { ChangeEvent, ReactElement } from 'react'
+import * as Popover from '@radix-ui/react-popover'
+import { Palette, Pipette } from 'lucide-react'
+import { ChangeEvent, CSSProperties, ReactElement } from 'react'
 import { TMode } from '../../../types'
 
 const recommendedColors = [
@@ -27,17 +27,17 @@ const modes: { name: string; mode: TMode; icon: ReactElement }[] = [
   {
     name: chrome.i18n.getMessage('scroll'),
     mode: 'rtl',
-    icon: <ScrollDanmakuIcon style={{ width: '3rem', height: '3rem' }} />,
+    icon: <ScrollDanmakuIcon style={{ width: 22, height: 22 }} />,
   },
   {
     name: chrome.i18n.getMessage('top'),
     mode: 'top',
-    icon: <TopDanmakuIcon style={{ width: '3rem', height: '3rem' }} />,
+    icon: <TopDanmakuIcon style={{ width: 22, height: 22 }} />,
   },
   {
     name: chrome.i18n.getMessage('bottom'),
     mode: 'bottom',
-    icon: <BottomDanmakuIcon style={{ width: '3rem', height: '3rem' }} />,
+    icon: <BottomDanmakuIcon style={{ width: 22, height: 22 }} />,
   },
 ]
 
@@ -53,21 +53,21 @@ export default function StyleEditorTrigger({
   onColorChange: (color: string) => void
 }) {
   return (
-    <HoverCard.Root>
-      <HoverCard.Trigger className="style-editor-trigger">
+    <Popover.Root>
+      <Popover.Trigger className="style-editor-trigger" aria-label="Danmaku style">
         <Palette size={18} strokeWidth={2} />
-      </HoverCard.Trigger>
-      <HoverCard.Portal>
-        <HoverCard.Content sideOffset={10} collisionPadding={10} style={{ zIndex: 9999 }}>
+      </Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Content sideOffset={10} collisionPadding={10} style={{ zIndex: 9999 }}>
           <StyleEditor
             mode={mode}
             color={color}
             onModeChange={onModeChange}
             onColorChange={onColorChange}
           />
-        </HoverCard.Content>
-      </HoverCard.Portal>
-    </HoverCard.Root>
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
   )
 }
 
@@ -82,59 +82,67 @@ export function StyleEditor({
   onModeChange: (mode: TMode) => void
   onColorChange: (color: string) => void
 }) {
-  const handleModeSelectorClicked = (m: TMode) => {
-    onModeChange(m)
-  }
-
   const handleColorInputChanged = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.value.match(/^#[0-9a-fA-F]{0,6}$/)) return
     onColorChange(e.target.value.toUpperCase())
   }
 
-  const handleRecommendColorClicked = (c: string) => {
-    onColorChange(c)
-  }
+  const normalizedColor = color.toUpperCase()
 
   return (
     <div className="style-editor-content">
-      <div>
-        <div className="style-editor-content-section-title">{chrome.i18n.getMessage('mode')}</div>
-        <div style={{ display: 'flex', gap: '2rem' }}>
+      <section className="se-section">
+        <div className="se-section-title">{chrome.i18n.getMessage('mode')}</div>
+        <div className="se-mode-group" role="radiogroup">
           {modes.map(({ name, mode: m, icon }) => (
-            <div
+            <button
+              type="button"
+              role="radio"
+              aria-checked={mode === m}
               key={m}
-              className="mode-selector"
-              style={{ color: mode === m ? '#C68EE6' : 'gray' }}
-              onClick={() => handleModeSelectorClicked(m)}
+              className={'se-mode-option' + (mode === m ? ' selected' : '')}
+              onClick={() => onModeChange(m)}
             >
               {icon}
-              <div>{name}</div>
-            </div>
+              <span>{name}</span>
+            </button>
           ))}
         </div>
-      </div>
-      <div>
-        <div className="style-editor-content-section-title">{chrome.i18n.getMessage('color')}</div>
-        <div style={{ display: 'flex', gap: '1rem' }}>
+      </section>
+
+      <section className="se-section">
+        <div className="se-section-title">{chrome.i18n.getMessage('color')}</div>
+        <div className="se-color-input-row">
+          <span className="se-color-preview" style={{ background: color }} aria-hidden />
           <input
+            className="se-color-input"
             onChange={handleColorInputChanged}
             value={color}
-            style={{ flex: 1, width: 0 }}
-            className="color-input"
+            spellCheck={false}
+            maxLength={7}
           />
-          <div style={{ background: color }} className="color-preview" />
+          <label className="se-color-picker" aria-label={chrome.i18n.getMessage('color')}>
+            <Pipette size={14} strokeWidth={2} />
+            <input
+              type="color"
+              value={color}
+              onChange={(e) => onColorChange(e.target.value.toUpperCase())}
+            />
+          </label>
         </div>
-      </div>
-      <div className="recommended-colors">
-        {recommendedColors.map((c) => (
-          <div
-            key={c}
-            style={{ background: c }}
-            className="recommended-color"
-            onClick={() => handleRecommendColorClicked(c)}
-          />
-        ))}
-      </div>
+        <div className="se-color-swatches">
+          {recommendedColors.map((c) => (
+            <button
+              type="button"
+              key={c}
+              aria-label={c}
+              className={'se-swatch' + (c === normalizedColor ? ' selected' : '')}
+              style={{ background: c, ['--swatch-color' as string]: c } as CSSProperties}
+              onClick={() => onColorChange(c)}
+            />
+          ))}
+        </div>
+      </section>
     </div>
   )
 }
